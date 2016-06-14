@@ -28,6 +28,7 @@ import domain.User;
 import service.UserService;
 import tools.CaptchaGenerator;
 import tools.MyCage;
+import tools.UploadOperation;
 
 @Controller
 @RequestMapping("/user")
@@ -78,7 +79,8 @@ public class UserController {
 
 		if (userService.hasMatchUser(loginedUser.getUserId(), loginedUser.getPassword())){
 			//将登陆的用户放入session
-			request.getSession().setAttribute("loginedUser", loginedUser);
+			User user = userService.findUserByUserId(loginedUser.getUserId());
+			request.getSession().setAttribute("loginedUser", user);
 			//如果勾选了记住密码选项且信息正确
 			if (isRememberPwd == true){
 				Cookie userId = new Cookie("userId", loginedUser.getUserId()); 
@@ -239,6 +241,8 @@ public class UserController {
 		//插入用户操作
 		if ( userService.insertUser(user) ){	
 			request.setAttribute("createInfo", "注册成功\n");
+			//如果注册成功，则自动为他登录
+			request.getSession().setAttribute("loginedUser", userService.findUserByUserId(user.getUserId()));
 			logger.info("编号为 "+ user.getUserId() + "的用户注册成功。。\n");	
 			return "index";
 		}
@@ -306,21 +310,29 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value="manage/abc")
-	public String sendE3mail(HttpServletRequest request){
-		System.out.println("a"+request.getSession().getAttribute("emailCaptcha"));
-		return "";
-
-	}
-
 	//绑定邮箱操作
 	@RequestMapping(value = "manage/bindEmail", method=RequestMethod.POST)
 	public String bindUserEmail(@RequestParam("emailCaptcha") String userInputCode, 
 			String receiveAddress, HttpServletRequest request){
-
+		
 		//把邮箱地址放入request中
 		request.setAttribute("emailAddress", receiveAddress);
 
+		String emailRegeXp = "([a-z0-9_\\.-]{2,15})@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})";
+		//判断输入的邮箱是否为空
+		if (receiveAddress == null || receiveAddress.equals(""))
+		{
+			request.setAttribute("bindResult", "邮箱不能为空");
+			return "userManage";
+		}
+		
+		//如果邮件格式不正确，提前返回
+		if (! receiveAddress.matches(emailRegeXp))
+		{
+			request.setAttribute("bindResult", "邮箱格式不正确");
+			return "userManage";
+		}
+		
 		//先判断是否为null，短路运算符
 		if (userInputCode != null && userInputCode.equals(""))
 		{
@@ -332,18 +344,11 @@ public class UserController {
 		String realEmailCode = (String) request.getSession().getAttribute("emailCaptcha");
 		String serverSendAddress = (String) request.getSession().getAttribute("emailAddress");
 
-		//判断输入的邮箱是否为空
-		if (receiveAddress == null || receiveAddress.equals(""))
-		{
-			request.setAttribute("bindResult", "邮箱不能为空");
-			return "userManage";
-		}
-
 		//如果用户输入的邮箱地址和服务器发送的邮箱地址相同
 		//防止先获取了验证码，再使用其他的邮箱绑定
 		if (serverSendAddress != null && !receiveAddress.equals(serverSendAddress))
 		{
-			request.setAttribute("bindResult", "邮箱不同");
+			request.setAttribute("bindResult", "发送邮件的邮箱和要绑定的邮箱不同");
 			return "userManage";
 		}
 
@@ -354,7 +359,7 @@ public class UserController {
 				userInputCode.equals(realEmailCode))
 		{
 			//从session中取得LoginingUser实例
-			LoginingUser user = (LoginingUser) request.getSession().getAttribute("loginedUser");
+			User user = (User) request.getSession().getAttribute("loginedUser");
 			String userId = user.getUserId();
 			//进行绑定操作
 			if (userService.bindEmail(userId, receiveAddress) == true){
@@ -362,6 +367,9 @@ public class UserController {
 				//绑定成功的话，将属性从session中移除
 				request.getSession().removeAttribute("emailCaptcha");
 				request.getSession().removeAttribute("emailAddress");
+				//更新session中登录用户的信息
+				request.getSession().setAttribute("loginedUser", userService.findUserByUserId(userId));
+				logger.info(userId + "用户邮箱绑定成功");
 			}
 			else
 			{
@@ -373,70 +381,43 @@ public class UserController {
 		}
 		return "userManage";
 	}
-
+	//上传头像
 	@RequestMapping(value="manage/upHeadScul")
 	public String upHeadScul(@RequestParam(value="headScul")MultipartFile headScul , HttpServletRequest request) throws IllegalStateException, IOException{
-
-		ServletContext servletContext = request.getSession().getServletContext();
-		//获取web根目录,但是在eclipse中，是在一个临时文件夹，如：
-		//\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\
-		String rootPath = servletContext.getRealPath("/");    
-		LoginingUser loginedUser = (LoginingUser) request.getSession().getAttribute("loginedUser");
+		//获取web根目录
+		String rootPath = UploadOperation.getContextPath(request); 
+		//从session中获取登录的User实例
+		User loginedUser = (User) request.getSession().getAttribute("loginedUser");
 		String userId = loginedUser.getUserId();
-		
-		int index = 0;
-		int count  = 0;
-
-		//向上取七层
-		for (index = rootPath.length() - 1; index >= 0; index--){
-			if (rootPath.charAt(index) == File.separatorChar)count++;		
-			if (count == 7) break;
-		}
-		String realWebpath = rootPath.substring(0, index);
-		logger.debug("web根路径：" + realWebpath);
+		//上传的文件名
 		String fileName = headScul.getOriginalFilename();
+		//文件扩展名
 		String prefix=fileName.substring(fileName.lastIndexOf(".")+1);
-		String userDirName = realWebpath + File.separatorChar + "OnlineShopping\\src\\main\\webapp\\uploads\\"
-				+ userId + File.separatorChar;
-		File dir = new File(userDirName);
+		String userDirPath = UploadOperation.getUserDirPath(rootPath, userId);
 		
-		if (dir.isDirectory()) System.out.println("是目录");
-		if (dir.exists() == false) System.out.println("不存在");
-		//如果用户在上传文件夹中没有文件夹，也就是没有上传过图片，则新建
-		if (dir.exists() == false)
-		{
-			dir.mkdir();
-		}
+		UploadOperation.operUserUpDir(userDirPath);
 
 		//文件路径，上传到用户独立的文件夹，如uploads/1072842511，表示用户Id为1072842511上传的图片
-		String filePath = realWebpath + File.separatorChar + "OnlineShopping\\src\\main\\webapp\\uploads\\"
-				+ userId + File.separatorChar + "headScul." + prefix;
-		System.out.println(filePath);
+		String filePath = UploadOperation.getUploadPath(rootPath, userId, prefix);
+		
+		
 		if (!headScul.isEmpty())
 		{
 			String contentType = headScul.getContentType();
 			//判断是否是图片的格式，如JPEG
-			if (contentType.equals("image/png") || contentType.equals("image/jpeg") ||
-					contentType.equals("image/gif"))
+			if (UploadOperation.isVaildPicture(contentType))
 			{
-				//如果用户之前上传过头像则删除。
-				String[] headPrefixs = new String[]	
-						{	
-							"jpg","png","gif", "jpeg"
-						};
-				for (String headPrefix : headPrefixs){
-					//头像名称为headScul，可自定义
-					File file = new File(userDirName + "headScul." + headPrefix);
-					if (file.exists())
-						file.delete();
-				}
+				UploadOperation.deleteUploadedHead(userDirPath);
 				headScul.transferTo(new File(filePath));
 				request.setAttribute("upLoadResult", "上传头像成功");
+				//更新数据库中用户头像
+				userService.updateHeadscul(userId, "headScul." + prefix);
+				//更新session中登录用户的信息
+				request.getSession().setAttribute("loginedUser", userService.findUserByUserId(userId));
 			}
 			else {
 				request.setAttribute("upLoadResult", "上传的图片必须是JPG或PNG或GIF格式！");
 			}
-			
 		} else
 			request.setAttribute("upLoadResult", "请选择图片!");
 		return "userManage";

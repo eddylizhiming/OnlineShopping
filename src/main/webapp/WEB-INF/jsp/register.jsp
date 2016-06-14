@@ -9,7 +9,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 
-<script type="text/javascript" src="/OnlineShopping/jquery/jquery.js"></script>
+<!-- 引入jQuery源码 -->
+<script type="text/javascript" src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
 <script type="text/javascript">
 
 	//检查用户名是否可用
@@ -36,7 +37,6 @@
 			alert("该用户名已经注册，请更换");
 			flag = false;
 		}
-			
 		return flag;
 	}
 </script>

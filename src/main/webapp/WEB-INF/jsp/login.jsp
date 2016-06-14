@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 
-<script type="text/javascript" src="/OnlineShopping/jquery/jquery.js"></script>
+<script type="text/javascript" src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
 <script type="text/javascript">
 
 	$(document).ready(function(){

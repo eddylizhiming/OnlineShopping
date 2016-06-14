@@ -25,7 +25,7 @@ public class User implements Serializable{
 	private String authority = "ordinary";
 	@Email
 	private String email;
-	
+	private String headScul;
 	
 	public User() {
 		//email初始化为空
@@ -66,6 +66,12 @@ public class User implements Serializable{
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getHeadScul() {
+		return headScul;
+	}
+	public void setHeadScul(String headScul) {
+		this.headScul = headScul;
 	}
 
 }

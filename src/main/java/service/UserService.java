@@ -37,5 +37,13 @@ public interface UserService {
 	 * @return 更新成功返回True
 	 */
 	boolean updateUserInfo(User user); 
+	/**
+	 * 跟新用户的头像
+	 * @param userId 用户的Id
+	 * @param fileName 头像的文件名
+	 * @return 更新头像成功返回True，否则返回False
+	 */
+	boolean updateHeadscul(String userId, String fileName);
 	
+	User findUserByUserId(String userId);
 }

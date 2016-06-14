@@ -55,6 +55,8 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		p:defaultEncoding="utf-8"
 		p:maxUploadSize="5248800"
-		p:uploadTempDir="upload/temp"/>
-	
+		p:uploadTempDir="uploads/temp"/>
+		
+	<!-- 配置资源目录，将多个物理路径映射为一个逻辑路径 -->
+	<mvc:resources mapping="/resourceRoot/**" location="/,classpath:/"/>
 </beans>

@@ -35,8 +35,19 @@ public class UserServiceImpl implements UserService {
 		return this.updateUserInfo(user);
 	}
 	public boolean updateUserInfo(User user) {
-		// TODO Auto-generated method stub
+		
 		return userDao.updateUserInfo(user) > 0 ?  true : false;
+	}
+	public User findUserByUserId(String userId) {
+		
+		return userDao.findUserByUserId(userId);
+	}
+	public boolean updateHeadscul(String userId, String fileName) {
+		
+		User user = userDao.findUserByUserId(userId);
+		if (user == null) return false;
+		user.setHeadScul(fileName);
+		return this.updateUserInfo(user);
 	}
 
 }
