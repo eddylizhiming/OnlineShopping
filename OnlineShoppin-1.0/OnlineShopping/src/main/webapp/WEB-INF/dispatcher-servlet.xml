@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- 扫描web包中标注了@controller的类，放入Spring容器 -->
+	<context:component-scan base-package="web"/>
+	
+	<!-- 配置内容协商视图解析器，可使用?content=xxx来以不同MIME形式获取相同资源 -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"
+		p:order="0"
+		p:defaultContentType="text/html"
+		p:ignoreAcceptHeader="true"
+		p:favorPathExtension="false"
+		p:favorParameter="true"
+		p:parameterName="content">
+		
+		<property name="mediaTypes">
+			<map>
+				<entry key="html" value="text/html"></entry>
+			</map>
+		</property>
+	</bean>	
+	<!-- 默认视图解析器，如JSP等文件由它负责 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:order="100"
+		p:viewClass="org.springframework.web.servlet.view.JstlView"
+		p:prefix="/WEB-INF/jsp/"
+		p:suffix=".jsp"/>
+
+	<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"></bean>
+	<bean class="tools.UTF8StringHttpMessageConverter"/>
+	<!-- 配置这个，@Valid注解才会生效 ，注解驱动。-->
+	<mvc:annotation-driven />
+	
+	<!-- 配置国际化资源 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource"
+		p:basename="conf/i18n/message"/>
+	<!-- 可以访问静态资源 -->	
+	<mvc:default-servlet-handler/>
+
+
+</beans>
