@@ -26,11 +26,12 @@ import domain.LoginingUser;
 import domain.User;
 import service.UserService;
 import tool.CaptchaGenerator;
+import tool.FormatValidation;
 import tool.MyCage;
 import tool.UploadOperation;
 
 @Controller
-@RequestMapping("/user/${userId}")
+@RequestMapping("/user")
 //将本处理器中任何处理方法属性名为loginedUser的模型属性存储到HttpSession中
 @SessionAttributes("loginedUser")
 public class UserController {
@@ -319,18 +320,10 @@ public class UserController {
 		//把邮箱地址放入request中
 		request.setAttribute("emailAddress", receiveAddress);
 
-		String emailRegeXp = "([a-z0-9_\\.-]{2,15})@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})";
-		//判断输入的邮箱是否为空
-		if (receiveAddress == null || receiveAddress.equals(""))
-		{
-			request.setAttribute("bindResult", "邮箱不能为空");
-			return "user_manage";
-		}
-		
-		//如果邮件格式不正确，提前返回
-		if (! receiveAddress.matches(emailRegeXp))
-		{
-			request.setAttribute("bindResult", "邮箱格式不正确");
+		//验证邮箱格式
+		String validEmailResult = FormatValidation.vaildEmailAddress(receiveAddress);
+		if (validEmailResult.equals("验证成功") == false){
+			request.setAttribute("bindResult", validEmailResult);
 			return "user_manage";
 		}
 		
@@ -424,4 +417,64 @@ public class UserController {
 		return "user_manage";
 	}
 
+	@RequestMapping(value = "manage/operUserInfo", method=RequestMethod.GET)
+	public String showUserInfo(HttpServletRequest request)
+	{	
+		User user = (User) request.getSession().getAttribute("loginedUser");
+		String userId =  user.getUserId();
+		user = userService.findUserByUserId(userId);
+		//更新session中的已经登录的信息
+		request.getSession().setAttribute("loginedUser", user);
+		
+		return "userInfo_query_update";
+	}
+	
+	@RequestMapping(value = "manage/operUserInfo", method=RequestMethod.POST)
+	public String updateUserInfo(String userName, String newEmailAddress, @RequestParam("emailCaptcha") String InputCaptcha, HttpServletRequest request)
+	{
+		User user = (User) request.getSession().getAttribute("loginedUser");
+		String aimUrl = "userInfo_query_update";
+		String realEmailCaptcha = (String) request.getSession().getAttribute("emailCaptcha");
+		
+		//验证邮箱格式
+		String validEmailResult = FormatValidation.vaildEmailAddress(newEmailAddress);
+		if (validEmailResult.equals("验证成功") == false){
+			request.setAttribute("updateInfoResult", validEmailResult);
+			return aimUrl;
+		}
+		
+		String serverSendAddress = (String) request.getSession().getAttribute("emailAddress");
+
+		//防止用户一直使用一个验证码来修改邮箱。
+		if (serverSendAddress != null && !user.getEmail().equals(serverSendAddress))
+		{
+			request.setAttribute("updateInfoResult", "请重新发送邮件到您的新邮箱");
+			return aimUrl;
+		}
+		if (InputCaptcha.equals(realEmailCaptcha) == false)
+		{
+			request.setAttribute("updateInfoResult", "邮件验证码不正确");
+			return aimUrl;
+		}
+		
+		
+		//更新字段信息
+		user.setUserName(userName);
+		user.setEmail(newEmailAddress);
+		//更新用户
+		boolean isUpdateOk =  userService.updateUserInfo(user);
+		
+		if (isUpdateOk == false)
+		{
+			logger.error(user.getUserId() + "信息更新失败");
+			request.setAttribute("updateInfoResult", "修改失败");
+			return aimUrl;
+		}
+		request.setAttribute("updateInfoResult", "修改成功");
+		//更新session中的信息。。
+		request.getSession().setAttribute("loginedUser", user);
+		
+	
+		return aimUrl;
+	}
 }

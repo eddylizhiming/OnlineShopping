@@ -2,9 +2,12 @@ package domain;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Email;
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,7 +23,12 @@ public class User implements Serializable{
 	private String userName;
 	@Pattern(regexp = "\\S{6,30}")
 	private String password;
-	private double balance;
+	/**
+	 * 可用余额必须大于0，并将其格式化为货币类型
+	 */
+	@Min(0)
+	@NumberFormat(style=Style.CURRENCY)
+	private double balance = 0.0;
 	//默认为普通用户
 	private String authority = "ordinary";
 	@Email

@@ -68,5 +68,6 @@
 		<input type="submit" value="上传"/>
 	</form>
 	
+	<a href="">查询或修改您的信息</a>
 </body>
 </html>
