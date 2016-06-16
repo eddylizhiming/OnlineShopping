@@ -1,4 +1,4 @@
-package tools;
+package tool;
 
 import java.io.File;
 

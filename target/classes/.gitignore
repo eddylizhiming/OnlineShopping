@@ -1,6 +1,8 @@
-/cons/
-/dao/
-/domain/
-/service/
 /tools/
+/dao/
+/cons/
+/domain/
 /web/
+/service/
+/tool/
+/good/

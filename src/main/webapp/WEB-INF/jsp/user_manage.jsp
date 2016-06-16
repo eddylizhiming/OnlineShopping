@@ -39,8 +39,8 @@
 		<c:otherwise> 
 			<c:set var="userHeadSrc">uploads/${loginedUser.userId}/${loginedUser.headScul }</c:set>
 	  	</c:otherwise>
-
 	</c:choose>
+	
 	用户的头像：<img alt="头像" src="<c:url value = '/${userHeadSrc}'/>"/>
 	<br/>
 	<%=request.getSession().getServletContext().getRealPath("/") %>

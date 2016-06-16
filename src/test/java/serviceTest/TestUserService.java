@@ -1,4 +1,4 @@
-package daoTest;
+package serviceTest;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -39,7 +39,7 @@
 		
 	<!-- HTTP请求处理器适配器 -->
 	<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"></bean>
-	<bean class="tools.UTF8StringHttpMessageConverter"/>
+	<bean class="tool.UTF8StringHttpMessageConverter"/>
 	<!-- 配置这个，@Valid注解才会生效 ，注解驱动。，并有优雅风格的网址，如user/123456-->
 	<mvc:annotation-driven />
 	

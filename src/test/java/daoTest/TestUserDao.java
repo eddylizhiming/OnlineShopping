@@ -1,16 +1,15 @@
 package daoTest;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import dao.UserDao;
-import dao.UserDaoImpl;
 import domain.User;
-import tools.CaptchaGenerator;
+import tool.CaptchaGenerator;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/daoContext.xml"}) 
@@ -18,8 +17,6 @@ public class TestUserDao {
 
 	@Autowired
 	private UserDao userDao;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 	@Test
 	public void test() {
 /*		UserDao userDao = new UserDaoImpl();

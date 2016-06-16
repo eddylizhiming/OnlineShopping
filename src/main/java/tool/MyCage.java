@@ -1,11 +1,10 @@
-package tools;
+package tool;
 
-import com.github.cage.Cage;
-import com.github.cage.IGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import javax.annotation.Resource;
+import com.github.cage.Cage;
+import com.github.cage.IGenerator;
 
 @Component
 public class MyCage extends Cage {

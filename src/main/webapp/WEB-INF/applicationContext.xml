@@ -13,7 +13,7 @@
 	<context:component-scan base-package="domain"/>
 
 	<!-- 扫描tools包中标注了@component的类，放入Spring容器 -->
-	<context:component-scan base-package="tools"/>
+	<context:component-scan base-package="tool"/>
 	
 
 </beans>

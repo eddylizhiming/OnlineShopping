@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,12 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 import domain.LoginingUser;
 import domain.User;
 import service.UserService;
-import tools.CaptchaGenerator;
-import tools.MyCage;
-import tools.UploadOperation;
+import tool.CaptchaGenerator;
+import tool.MyCage;
+import tool.UploadOperation;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user/${userId}")
 //将本处理器中任何处理方法属性名为loginedUser的模型属性存储到HttpSession中
 @SessionAttributes("loginedUser")
 public class UserController {
@@ -39,6 +38,8 @@ public class UserController {
 	private static Logger logger = Logger.getLogger(UserController.class);
 	@Autowired
 	private UserService userService;
+	//商品类型
+	
 	@ModelAttribute("user")
 	public LoginingUser getUser()
 	{
@@ -280,7 +281,7 @@ public class UserController {
 	@RequestMapping(value="/manage")
 	public String forwardUserManage(){
 
-		return "userManage";
+		return "user_manage";
 	}
 
 	//发送邮件
@@ -323,21 +324,21 @@ public class UserController {
 		if (receiveAddress == null || receiveAddress.equals(""))
 		{
 			request.setAttribute("bindResult", "邮箱不能为空");
-			return "userManage";
+			return "user_manage";
 		}
 		
 		//如果邮件格式不正确，提前返回
 		if (! receiveAddress.matches(emailRegeXp))
 		{
 			request.setAttribute("bindResult", "邮箱格式不正确");
-			return "userManage";
+			return "user_manage";
 		}
 		
 		//先判断是否为null，短路运算符
 		if (userInputCode != null && userInputCode.equals(""))
 		{
 			request.setAttribute("bindResult", "请输入验证码");
-			return "userManage";
+			return "user_manage";
 		}
 
 		//获取服务器端产生的验证码及服务器发送的邮箱地址
@@ -349,7 +350,7 @@ public class UserController {
 		if (serverSendAddress != null && !receiveAddress.equals(serverSendAddress))
 		{
 			request.setAttribute("bindResult", "发送邮件的邮箱和要绑定的邮箱不同");
-			return "userManage";
+			return "user_manage";
 		}
 
 		logger.info("邮件验证码：" + realEmailCode);
@@ -379,7 +380,7 @@ public class UserController {
 		}else {
 			request.setAttribute("bindResult", "验证码不正确，请确认");
 		}
-		return "userManage";
+		return "user_manage";
 	}
 	//上传头像
 	@RequestMapping(value="manage/upHeadScul")
@@ -420,7 +421,7 @@ public class UserController {
 			}
 		} else
 			request.setAttribute("upLoadResult", "请选择图片!");
-		return "userManage";
+		return "user_manage";
 	}
 
 }
