@@ -13,7 +13,7 @@ public class UTF8StringHttpMessageConverter implements BeanPostProcessor {
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (bean instanceof StringHttpMessageConverter) {
 			MediaType mediaType = new MediaType("text", "plain", Charset.forName("UTF-8"));
-			List types = new ArrayList();
+			List<MediaType> types = new ArrayList<MediaType>();
 			types.add(mediaType);
 			((StringHttpMessageConverter) bean).setSupportedMediaTypes(types);
 		}

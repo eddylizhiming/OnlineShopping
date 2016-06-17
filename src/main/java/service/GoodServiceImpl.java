@@ -18,4 +18,8 @@ public class GoodServiceImpl implements GoodService{
 		return goodDao.getPagedGoodsByType(pageNo, pageSize, typeId);
 	}
 
+	public Page<Good> searchGoodsByCondition(int typeId, String goodCondition, int pageNo) {
+		return goodDao.searchGoodsByCondition(typeId, goodCondition, pageNo);
+	}
+
 }

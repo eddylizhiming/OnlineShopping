@@ -321,7 +321,7 @@ public class UserController {
 		request.setAttribute("emailAddress", receiveAddress);
 
 		//验证邮箱格式
-		String validEmailResult = FormatValidation.vaildEmailAddress(receiveAddress);
+		String validEmailResult = FormatValidation.vaildBindEmailAddress(receiveAddress);
 		if (validEmailResult.equals("验证成功") == false){
 			request.setAttribute("bindResult", validEmailResult);
 			return "user_manage";
@@ -436,31 +436,36 @@ public class UserController {
 		String aimUrl = "userInfo_query_update";
 		String realEmailCaptcha = (String) request.getSession().getAttribute("emailCaptcha");
 		
-		//验证邮箱格式
-		String validEmailResult = FormatValidation.vaildEmailAddress(newEmailAddress);
-		if (validEmailResult.equals("验证成功") == false){
-			request.setAttribute("updateInfoResult", validEmailResult);
-			return aimUrl;
-		}
-		
-		String serverSendAddress = (String) request.getSession().getAttribute("emailAddress");
+		//如果用户更改邮箱
+		if (newEmailAddress.equals("") == false)
+		{
+			//验证邮箱格式
+			String validEmailResult = FormatValidation.vaildUpdateEmailAddress(newEmailAddress);
+			if (validEmailResult.equals("验证成功") == false){
+				request.setAttribute("updateInfoResult", validEmailResult);
+				return aimUrl;
+			}
+			
+			String serverSendAddress = (String) request.getSession().getAttribute("emailAddress");
 
-		//防止用户一直使用一个验证码来修改邮箱。
-		if (serverSendAddress != null && !user.getEmail().equals(serverSendAddress))
-		{
-			request.setAttribute("updateInfoResult", "请重新发送邮件到您的新邮箱");
-			return aimUrl;
+			//防止用户一直使用一个验证码来修改邮箱。
+			if (serverSendAddress != null && !user.getEmail().equals(serverSendAddress))
+			{
+				request.setAttribute("updateInfoResult", "请重新发送邮件到您的新邮箱");
+				return aimUrl;
+			}
+			if (InputCaptcha.equals(realEmailCaptcha) == false)
+			{
+				request.setAttribute("updateInfoResult", "邮件验证码不正确");
+				return aimUrl;
+			}
+			user.setEmail(newEmailAddress);
+			
 		}
-		if (InputCaptcha.equals(realEmailCaptcha) == false)
-		{
-			request.setAttribute("updateInfoResult", "邮件验证码不正确");
-			return aimUrl;
-		}
-		
 		
 		//更新字段信息
 		user.setUserName(userName);
-		user.setEmail(newEmailAddress);
+		
 		//更新用户
 		boolean isUpdateOk =  userService.updateUserInfo(user);
 		
@@ -474,7 +479,6 @@ public class UserController {
 		//更新session中的信息。。
 		request.getSession().setAttribute("loginedUser", user);
 		
-	
 		return aimUrl;
 	}
 }

@@ -1,5 +1,8 @@
 package dao;
 
+import static cons.ConDataBase.SELECT_GOODS_COUNT_BYTYPE_SQL;
+import static cons.ConDataBase.SELECT_PAGEGOODS_BYTYPE_SQL;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +10,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import static cons.ConDataBase.*;
 import domain.Good;
 import tool.Page;
 
@@ -19,7 +21,7 @@ public class GoodDaoImpl implements GoodDao{
 	
 	public Page<Good> getPagedGoodsByType(int pageNo, int pageSize, int typeId) {
 		//获取该类型下的商品总数
-		long totalCount = jdbcTemplate.queryForLong(SELECT_GOODS_COUNT_SQL, new Object[]{typeId});
+		long totalCount = jdbcTemplate.queryForLong(SELECT_GOODS_COUNT_BYTYPE_SQL, new Object[]{typeId});
 		
 		if(totalCount <= 0){
 			return new Page<Good>();
@@ -31,6 +33,46 @@ public class GoodDaoImpl implements GoodDao{
 				new Object[]{typeId, startIndex, pageSize}, new BeanPropertyRowMapper<Good>(Good.class));
 
 		return new Page<Good>(startIndex, totalCount, pageSize, data);
+	}
+	
+	private <T> T oneOrNull(List<T> list) {
+		if (list == null || list.size() == 0) {
+			return null;
+		} else {	
+			return list.get(0);
+		}
+	}
+
+	public Page<Good> searchGoodsByCondition(int typeId, String goodCondition, int pageNo) {
+		//条件搜索的商品总数，貌似解决不了占位符并条件搜索的问题。。
+		String select_search_goods_sql = "SELECT goodId, goodName, goodType, pictureSrc, amount  FROM tb_goods ";
+		select_search_goods_sql += " WHERE goodType = ? ";
+		select_search_goods_sql += " AND (goodId like '%"+ goodCondition +"%' ";
+		select_search_goods_sql += " OR goodName like '%" + goodCondition + "%') ";
+		
+		String select_search_goods_count_sql =  "SELECT count(*) FROM tb_goods";
+		select_search_goods_count_sql += " WHERE goodType = ? ";
+		select_search_goods_count_sql += " AND (goodId like '%"+ goodCondition +"%' ";
+		select_search_goods_count_sql += " OR goodName like '%" + goodCondition + "%') ";
+		
+		long totalCount = 0L;
+		//获取该条件下的商品总数，先测试有无商品，不然执行queryForLong会抛出异常。。
+		if ( jdbcTemplate.query(select_search_goods_sql, new Object[]{typeId} , new BeanPropertyRowMapper(Good.class)).size() != 0)
+		{
+			totalCount = jdbcTemplate.queryForLong(select_search_goods_count_sql, new Object[]{typeId} );
+		}
+		else
+			return new Page<Good>();
+
+		//搜索的结果从第一页展示，采用默认大小
+		int startIndex = Page.getStartOfPage(pageNo, Page.DEFAULT_PAGE_SIZE);
+		
+		select_search_goods_sql += " LIMIT ?, ?";
+		//limit从0开始
+		List<Good> data = jdbcTemplate.query(select_search_goods_sql, 
+				new Object[]{typeId, startIndex, Page.DEFAULT_PAGE_SIZE}, new BeanPropertyRowMapper<Good>(Good.class));
+
+		return new Page<Good>(startIndex, totalCount, Page.DEFAULT_PAGE_SIZE, data);
 	}
 
 }

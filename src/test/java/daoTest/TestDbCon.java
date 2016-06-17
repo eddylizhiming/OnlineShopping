@@ -15,7 +15,6 @@ public class TestDbCon {
 		if (dataSource.getConnection() != null){
 			System.out.println("数据库连接成功");
 		}
-		
 
 		
 	}

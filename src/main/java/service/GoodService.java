@@ -13,4 +13,11 @@ public interface GoodService {
 	 * @return 分页过的商品信息
 	 */
 	public Page<Good> getPagedGoodsByType(int pageNo, int pageSize, int typeId);
+	/***
+	 * 通过条件搜索商品
+	 * @param typeId 类型的id
+	 * @param goodCondition 模糊查询的商品编号或商品名称
+	 * @return 分页的商品列表
+	 */
+	public Page<Good> searchGoodsByCondition(int typeId, String goodCondition, int pageNo);
 }
