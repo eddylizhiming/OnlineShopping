@@ -113,6 +113,10 @@ public class UserController {
 				}  
 
 			}
+			//如果权限是管理员
+			if(user.getAuthority().equals("admin"))
+				return "admin_manage";
+			
 			return "index";
 		}
 		else {
@@ -278,7 +282,21 @@ public class UserController {
 		return filePath;
 	}
 
-
+	//前台AJAX调用
+	@ResponseBody
+	@RequestMapping(value = "loginCheck")
+	public String checkUserInfoCorrect(String userId, String password) throws IOException{
+		
+		if (userService.findUserByUserId(userId) == null)
+			return "该用户名不存在";
+		if (userService.hasMatchUser(userId, password))
+		{
+			return "登录成功";
+		}
+		return "密码错误";
+		
+	}
+	
 	@RequestMapping(value="/manage")
 	public String forwardUserManage(){
 

@@ -1,8 +1,0 @@
-mysql连接jar    mysql-connector-java
-junit配置             junit4.8.1
-jstl配置  jstl-1.2.jar    standard-1.1.2.jar
-
-
-Junit单元测试Spring 读取WEB-INF下的配置文件
-http://www.mrfeng.net/post/189.html
-cage 验证码  与spring整合 http://lavasoft.blog.51cto.com/62575/1406903/
