@@ -20,4 +20,10 @@ public interface GoodService {
 	 * @return 分页的商品列表
 	 */
 	public Page<Good> searchGoodsByCondition(int typeId, String goodCondition, int pageNo);
+	/***
+	 * 通过制定的Id查找商品
+	 * @param goodId
+	 * @return 查找不到返回null
+	 */
+	public Good findGoodById(String goodId);
 }

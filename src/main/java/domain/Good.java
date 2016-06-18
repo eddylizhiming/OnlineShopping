@@ -2,6 +2,9 @@ package domain;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +16,10 @@ public class Good implements Serializable{
 	private String goodName;
 	private String goodType;
 	private String pictureSrc;
+	@Min(0)
 	private int amount;
+	@DecimalMin(value="0.1")
+	private double unitPrice;
 	
 	public String getGoodId() {
 		return goodId;

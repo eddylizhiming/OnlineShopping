@@ -2,8 +2,10 @@ package web;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,10 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import domain.Good;
 import domain.GoodType;
+import domain.User;
 import service.GoodService;
 import service.GoodTypeService;
+import service.ShoppingCarService;
 import tool.Page;
 
 @Controller
@@ -25,12 +31,21 @@ public class GoodController {
 	private GoodTypeService goodTypeService;
 	@Autowired
 	private GoodService goodService;
+	@Autowired
+	private ShoppingCarService shoppingCarService;
 
 	@ModelAttribute("goodType")
 	public GoodType getGoodType()
 	{
 		return new GoodType();
 	}
+	
+	@ModelAttribute("good")
+	public Good getGood()
+	{
+		return new Good();
+	}
+	
 	//展示一个类型下的所有商品信息
 	@RequestMapping(value="type/{typeId}/showGoods")
 	//设置默认值
@@ -86,7 +101,7 @@ public class GoodController {
 		return "goods_search";
 	}
 	
-	@RequestMapping(value = "searchGoods", params={"pageNo"} ,method=RequestMethod.GET)
+	@RequestMapping(value = "{goodId}", params={"pageNo"} ,method=RequestMethod.GET)
 	public String operSearchResult(HttpServletRequest request, Integer pageNo)
 	{
 		Integer typeId =  (Integer) request.getSession().getAttribute("typeId");
@@ -97,5 +112,18 @@ public class GoodController {
 		request.setAttribute("goods", page.getResult());
 		
 		return "goods_search";
+	}
+	
+	//添加到购物车
+	@ResponseBody
+	@RequestMapping(value = "{goodId}/addToCar", params={"buyNum"} ,method=RequestMethod.POST)
+	public String addToCar(@PathVariable("goodId") String goodId, Integer buyNum , HttpServletRequest request)
+	{
+		User user = (User) request.getSession().getAttribute("loginedUser");
+		String userId = user.getUserId();
+		if ( shoppingCarService.addToCar(userId, goodId, buyNum) == true)
+			return "添加商品到购物车成功";
+		else
+			return "很抱歉，添加失败";
 	}
 }

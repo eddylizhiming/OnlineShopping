@@ -1,4 +1,4 @@
-<%@page import="tool.Page"%>
+<%@ page import="tool.Page"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -12,34 +12,23 @@
 <title>Insert title here</title>
 <script type="text/javascript" src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
 <script type="text/javascript">
-
-//数据验证及提交
-function validAndSubmit() {
-	//进行数据的验证，请在这里写代码
-	//TDOO
+	//！！！！符立明你来解决，获取选中的商品id，以及那一行文本框的值
+	//，id值我放在了addToCar的button数组，把goodId，buyNum的值设置好。
 	
-	/* //获取选中的类型id
-	var selectedTypeId =  $('#goodTypes option:selected').val();
-	//获取搜索商品的条件
-	var goodCondition = $('#goodCondition').val();
-
-	window.location.href="/OnlineShopping/good/searchGoods?typeId=" 
-			+ selectedTypeId +"&goodCondition="+goodCondition; */
-			
-	$('#searchForm').submit();
-}
-
-//显示搜索的结果
-function showSearchResult()
-{
-	if ("${searchResult}" != null && "${searchResult}" != "")
-	alert("${searchResult}");
-}
-
-//自动执行显示搜索商品结果
-window.onload = showSearchResult();
+	//添加到购物车
+	function addToCar() {
+		var goodId = "44";
+		var buyNum = "222";
+		$.post("/OnlineShopping/good/"+ goodId +"/addToCar", {
+			buyNum : buyNum
+		}, function(data) {
+			//返回的添加情况，如"添加成功"等。
+			alert(data);
+		});
+	}
 
 </script>
+
 </head>
 <body>
 	<!-- 搜索商品 -->
@@ -78,9 +67,42 @@ window.onload = showSearchResult();
 			 
 			<img alt="商品图片" src="<c:url value = '${goodPicSrc}'/>"/>
 			<span>${good.goodName}</span>
+			<!-- 商品数量 -->
+			<button name="minus" type="button">减</button>
+			<input type="text" id="buyNum" name="buyNum"/>
+			<button name="plus" type="button">加</button>
+			<button name="addToCar[]" id="addToCar" type="button" value="${good.goodId }" onclick="addToCar()">添加到购物车</button>
+			
 		</div>
 	</c:forEach>
 	
 	<pager:PageBar pageUrl="/good/type/${typeId }/showGoods" pageAttrKey="goodsPaged"></pager:PageBar>
+	
+	<script type="text/javascript" src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
+<script type="text/javascript">
+
+//数据验证及提交
+function validAndSubmit() {
+	//进行数据的验证，请在这里写代码
+	//TDOO
+
+	$('#searchForm').submit();
+}
+
+//显示搜索的结果
+function showSearchResult()
+{
+	if ("${searchResult}" != null && "${searchResult}" != "")
+	alert("${searchResult}");
+}
+
+//自动执行显示搜索商品结果
+window.onload = showSearchResult();
+
+$(document).ready(function(){
+	var numberOfGood = $('<select ')
+});
+
+</script>
 </body>
 </html>

@@ -33,7 +33,7 @@ public class UserDaoImpl implements UserDao{
 		String sql = SELECT_USER_SQL + " WHERE userId = ?";
 		Object args[] = {userId};
 		
-		return oneOrNull(jdbcTemplate.query(sql, args, new BeanPropertyRowMapper(User.class)));
+		return oneOrNull(jdbcTemplate.query(sql, args, new BeanPropertyRowMapper<User>(User.class)));
 	}
 
 	/**

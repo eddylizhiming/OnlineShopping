@@ -5,8 +5,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import dao.GoodDao;
-import domain.Good;
+import domain.Good;import service.UserService;
 
 import static junit.framework.Assert.*;
 
@@ -30,5 +31,17 @@ public class TestGoodDao {
 			System.out.println(good.getGoodName());
 		}
 		assertEquals(3, goodDao.searchGoodsByCondition(1, "2", 1).getResult().size());
+	}
+	
+	@Test
+	public void testFindGoodById()
+	{
+		assertEquals("周黑鸭",goodDao.findGoodById("44").getGoodName());
+	}
+	
+	@Test
+	public void addToCar()
+	{
+		
 	}
 }

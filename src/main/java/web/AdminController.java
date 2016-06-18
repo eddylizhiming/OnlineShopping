@@ -2,6 +2,8 @@ package web;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.zip.Inflater;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -69,32 +71,33 @@ public class AdminController {
 	public String updateUserHead(@RequestParam(value="newHeadScul") MultipartFile headScul, 
 		  @RequestParam("userId2") String userId, HttpServletRequest request) throws IllegalStateException, IOException
 	{	
+		String aimUrl = "admin_manage";
 		request.setAttribute("userId", userId);
 		if (userId.equals(""))
 		{
 			request.setAttribute("updateHeadResult", "用户Id不能为空");
-			return "admin_manage";
+			return aimUrl;
 		}
 		//判断是否有用户
-		if (userService.findUserByUserId(userId) == null)
+		User user = userService.findUserByUserId(userId);
+		if (user == null)
 		{
 			request.setAttribute("updateHeadResult", "没有Id为"+ userId + "的用户");
-			return "admin_manage";
+			return aimUrl;
 		}
-		//获取web根目录
-		String rootPath = UploadOperation.getContextPath(request); 
-		//从session中获取登录的User实例
-	
-		//上传的文件名
-		String fileName = headScul.getOriginalFilename();
-		//文件扩展名
-		String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
-		String userDirPath = UploadOperation.getUserDirPath(rootPath, userId);
+		//如果用户的权限不是普通用户
+		if(user.getAuthority().equals("ordinary") == false)
+		{
+			request.setAttribute("updateHeadResult", "您只能修改普通用户的资料");
+			return aimUrl;
+		}
+		//获取用户上传的基本信息
+		Map<String, String> infos = UploadOperation.getUploadInfos(request, headScul, userId);
+		String userDirPath = infos.get("userDirPath");
+		String prefix = infos.get("prefix");
 
 		UploadOperation.operUserUpDir(userDirPath);
-
-		//文件路径，上传到用户独立的文件夹，如uploads/1072842511，表示用户Id为1072842511上传的图片
-		String filePath = UploadOperation.getUploadPath(rootPath, userId, prefix);
+		String filePath = infos.get("filepath");
 
 		if (!headScul.isEmpty())
 		{
@@ -115,7 +118,7 @@ public class AdminController {
 			}
 		} else
 			request.setAttribute("updateHeadResult", "请选择图片!");
-		return "admin_manage";
+		return aimUrl;
 	}
 
 }

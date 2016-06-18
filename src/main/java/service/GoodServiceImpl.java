@@ -22,4 +22,8 @@ public class GoodServiceImpl implements GoodService{
 		return goodDao.searchGoodsByCondition(typeId, goodCondition, pageNo);
 	}
 
+	public Good findGoodById(String goodId) {
+		return goodDao.findGoodById(goodId);
+	}
+
 }

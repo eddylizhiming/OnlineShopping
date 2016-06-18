@@ -1,9 +1,13 @@
 package tool;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class UploadOperation {
 
@@ -90,5 +94,35 @@ public class UploadOperation {
 				+ userId + File.separatorChar;
 
 		return userDirPath;
+	}
+	
+	/***
+	 * 获取用户上传信息，包括web根目录、上传的文件名、文件扩展名
+	 * @param request
+	 * @param headScul
+	 * @param userId
+	 * @return
+	 */
+	public static Map<String, String> getUploadInfos(HttpServletRequest request, MultipartFile headScul, String userId){
+		Map<String, String> infos = new HashMap<String, String>();
+		
+		//获取web根目录
+		String rootPath = UploadOperation.getContextPath(request); 
+		//从session中获取登录的User实例
+	
+		//上传的文件名
+		String fileName = headScul.getOriginalFilename();
+		//文件扩展名
+		String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
+		String userDirPath = UploadOperation.getUserDirPath(rootPath, userId);
+		//文件路径，上传到用户独立的文件夹，如uploads/1072842511，表示用户Id为1072842511上传的图片
+		String filePath = UploadOperation.getUploadPath(rootPath, userId, prefix);
+		
+		infos.put("rootPath", rootPath);
+		infos.put("fileName", fileName);
+		infos.put("prefix", prefix);
+		infos.put("userDirPath", userDirPath);
+		infos.put("filePath", filePath);
+		return infos;
 	}
 }

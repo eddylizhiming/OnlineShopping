@@ -2,6 +2,7 @@ package service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dao.UserDao;
 import domain.User;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
 		
 		return userDao.findUserByUserId(userId);
 	}
+	
 	public boolean updateHeadscul(String userId, String fileName) {
 		
 		User user = userDao.findUserByUserId(userId);
