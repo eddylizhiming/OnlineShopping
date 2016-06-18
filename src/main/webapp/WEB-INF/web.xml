@@ -69,5 +69,9 @@
        		org.springframework.web.util.Log4jConfigListener
   		</listener-class>
  	</listener>
-	
+	<!-- 异常处理 -->
+	<error-page> 
+		<error-code>404</error-code> 
+		<location>/WEB-INF/jsp/exception/404.jsp</location> 
+	</error-page>
 </web-app>

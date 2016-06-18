@@ -29,6 +29,10 @@ public class ConDataBase {
 			+ " VALUES (:userId, :goodId, :amount) ";
 	public final static String SELECT_USER_HAS_BUY_GOOD_SQL = " SELECT userId, goodId, amount FROM tb_shoppingCar "
 			+ " WHERE userId = ? AND goodId = ? ";
-	public final static String UPDATE_USER_BOUGHT_GOODSNUM_SQL = " UPDATE tb_shoppingCar SET amount = amount + ? "
+	public final static String ADD_USER_BOUGHT_GOODSNUM_SQL = " UPDATE tb_shoppingCar SET amount = amount + ? "
 			+ " WHERE userId = ? AND goodId = ? ";
+	public final static String ALTER_USER_BOUGHT_GOODS_NUM_SQL = " UPDATE tb_shoppingCar SET amount = ? "
+			+ " WHERE userId = ? AND goodId = ? ";
+	public final static String REMOVE_GOOD_FROM_CAR_SQL = " DELETE FROM tb_shoppingCar WHERE userId = ? AND goodId = ? ";
+	
 }

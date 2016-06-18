@@ -20,15 +20,13 @@ public class ShoppingCarServiceImpl implements ShoppingCarService{
 	public boolean addToCar(String userId, String goodId, Integer buyNum) {
 		try{
 			//如果用户还没有购买该商品
-			if (shoppingCarDao.getUserBoughtGood(userId, goodId) == null)
-			{
+			if (shoppingCarDao.getUserBoughtGood(userId, goodId) == null){
 				//直接添加记录
 				shoppingCarDao.addToCar(userId, goodId, buyNum);
 			}
-			else
-			{				
+			else{				
 				//更新用户已购买该商品的数量
-				shoppingCarDao.updateGoodsBoughtNum(userId, goodId, buyNum);
+				shoppingCarDao.addGoodsBoughtNum(userId, goodId, buyNum);
 			}
 		}
 		catch(Exception exception)
@@ -38,6 +36,19 @@ public class ShoppingCarServiceImpl implements ShoppingCarService{
 			return false;
 		}
 		return true;
+	}
+
+	public boolean removeGoodFromCar(String userId, String goodId) {
+		
+		return shoppingCarDao.removeGoodFromCar(userId, goodId) > 0;
+	}
+
+	public boolean addGoodsBoughtNum(String userId, String goodId, int buyNum) {
+		return shoppingCarDao.addGoodsBoughtNum(userId, goodId, buyNum) > 0;
+	}
+
+	public boolean alterGoodsBoughtNum(String userId, String goodId, int buyNum) {
+		return shoppingCarDao.alterGoodsBoughtNum(userId, goodId, buyNum) > 0;
 	}
 
 }
