@@ -1,12 +1,13 @@
 package dao;
 
-import static cons.ConDataBase.SELECT_GOODS_COUNT_BYTYPE_SQL;
-import static cons.ConDataBase.SELECT_GOOD_BY_ID_SQL;
-import static cons.ConDataBase.SELECT_PAGEGOODS_BYTYPE_SQL;
+import static cons.ConDataBase.*;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import domain.Good;
@@ -17,7 +18,8 @@ public class GoodDaoImpl implements GoodDao{
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	public Page<Good> getPagedGoodsByType(int pageNo, int pageSize, int typeId) {
 		//获取该类型下的商品总数
 		long totalCount = jdbcTemplate.queryForLong(SELECT_GOODS_COUNT_BYTYPE_SQL, new Object[]{typeId});
@@ -79,6 +81,23 @@ public class GoodDaoImpl implements GoodDao{
 		Object args[] = { goodId };
 
 		return oneOrNull(jdbcTemplate.query(sql, args, new BeanPropertyRowMapper<Good>(Good.class)));
+	}
+
+	public Integer deleteGoodById(String goodId) {
+		
+		Object args[] = {goodId};
+		
+		return jdbcTemplate.update(DELETE_GOOD_BY_ID_SQL, args);
+	}
+
+	public Integer updateGoodInfo(Good good) {
+		SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(good);
+		return namedParameterJdbcTemplate.update(UPDATE_GOOD_SQL, sqlParameterSource);
+	}
+
+	public Integer insertGood(Good good) {
+		SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(good);
+		return namedParameterJdbcTemplate.update(INSERT_GOOD_SQL, sqlParameterSource);
 	}
 
 }

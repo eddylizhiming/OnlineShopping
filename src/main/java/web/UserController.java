@@ -51,7 +51,7 @@ public class UserController {
 	public String forwardLogin(HttpServletRequest request){
 		//直接输入地址的话，清除session中的验证码属性
 		//		request.getSession().removeAttribute("captcha");
-		return "login";
+		return "loginAndRegister";
 	}
 
 	/****
@@ -65,21 +65,24 @@ public class UserController {
 	public String loginCheck(@Valid @ModelAttribute("user") LoginingUser loginedUser, BindingResult bindingResult, @RequestParam(value="captcha") String captcha, 
 			HttpServletRequest request, boolean isRememberPwd, @RequestParam("rememberd_days") int rememberd_days,
 			HttpServletResponse response){
-
+		logger.info("sbs");
 		logger.debug("记住的天数：" + rememberd_days);
 
 		if (loginedUser.getUserId().equals("")){
 			request.setAttribute("loginError", "用户名不能为空");
-			return "login";
+			return "loginAndRegister";
 		}
 		//有校验错误直接返回登录页
 		if (bindingResult.hasErrors())
-			return "login";
+			return "loginAndRegister";
 		//			System.out.println("用户登录信息格式有错误");
 		else
 			logger.info("用户登录信息格式无错误");
 
 		if (userService.hasMatchUser(loginedUser.getUserId(), loginedUser.getPassword())){
+			//登录正确则将生成的登录验证码属性从session中移除
+			request.getSession().removeAttribute("captchaToken");
+			
 			//将登陆的用户放入session
 			User user = userService.findUserByUserId(loginedUser.getUserId());
 			request.getSession().setAttribute("loginedUser", user);
@@ -122,7 +125,7 @@ public class UserController {
 		else {
 			logger.info("有用户登录失败。");
 			request.setAttribute("loginError", "用户名或密码不正确");
-			return "login";
+			return "loginAndRegister";
 		}
 
 	}
@@ -180,8 +183,6 @@ public class UserController {
 
 		if (userInputCode.equalsIgnoreCase(realCode))
 		{
-			//填写正确则将生成的登录验证码属性从session中移除
-			request.getSession().removeAttribute("captchaToken");
 			return "填写正确";
 		}
 		else
@@ -198,7 +199,7 @@ public class UserController {
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public String forwardReigister(HttpServletRequest request){
 
-		return "register";
+		return "loginAndRegister";
 	}
 
 	/****
@@ -217,7 +218,7 @@ public class UserController {
 		{
 			flag = false;
 			request.setAttribute("createInfo", "用户名不能为空");
-			return "register";
+			return "loginAndRegister";
 		}
 		
 		//如果密码不等于确认密码
@@ -239,10 +240,10 @@ public class UserController {
 		if (userService.isUserExist(user.getUserId())){
 			request.setAttribute("createInfo", "该用户名已注册\n");
 			logger.error("发生了同步注册的情况。");
-			return "register";
+			return "loginAndRegister";
 		}
 		
-		if (flag == false) return "register";
+		if (flag == false) return "loginAndRegister";
 		
 		//插入用户操作
 		if ( userService.insertUser(user) ){	
@@ -256,7 +257,7 @@ public class UserController {
 		{
 			request.setAttribute("createInfo", "因为某些原因，注册失败。。\n");
 			logger.error("创建用户失败。。");
-			return "register";
+			return "loginAndRegister";
 		}
 
 	}
@@ -265,21 +266,19 @@ public class UserController {
 	@RequestMapping(value = "userExistCheck")
 	public String userExistCheck(String userId, HttpServletResponse response) throws IOException{
 		//根目录下的images文件夹，即webapp
-		String filePath = "/OnlineShopping/images/";
+		//String filePath = "/OnlineShopping/images/";
 		//如果用户名不满足正则则提前返回
 		if (userId.matches("\\w{6,30}") == false)
 		{
-			filePath += "userExist.jpg";
-			return filePath;
+			return "false";
 		}
 		if (userService.isUserExist(userId))
 		{
-			filePath += "userExist.jpg";
+			return "false";
 		}
-		else
-			filePath += "userAvl.jpg";
+		
 
-		return filePath;
+		return "true";
 	}
 
 	//前台AJAX调用
@@ -296,6 +295,8 @@ public class UserController {
 		return "密码错误";
 		
 	}
+	
+
 	
 	@RequestMapping(value="/manage")
 	public String forwardUserManage(){
@@ -410,7 +411,7 @@ public class UserController {
 		UploadOperation.operUserUpDir(userDirPath);
 
 		//文件路径，上传到用户独立的文件夹，如uploads/1072842511，表示用户Id为1072842511上传的图片
-		String filePath = UploadOperation.getUploadPath(rootPath, userId, prefix);
+		String filePath = UploadOperation.getUserUploadPath(rootPath, userId, prefix);
 		
 		
 		if (!headScul.isEmpty())

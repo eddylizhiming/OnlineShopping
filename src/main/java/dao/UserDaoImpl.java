@@ -18,6 +18,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Repository;
 
 import domain.User;
+import tool.FormatValidation;
 
 @Repository
 public class UserDaoImpl implements UserDao{
@@ -49,7 +50,7 @@ public class UserDaoImpl implements UserDao{
 	}
 
 
-	public int insertUser(User user) {
+	public Integer insertUser(User user) {
 		//设置用户默认头像为defaultHead.jpg
 		user.setHeadScul("defaultHead.jpg");
 		//使用具名参数，让bean属性与sql参数进行对应，这里是User
@@ -67,6 +68,9 @@ public class UserDaoImpl implements UserDao{
 	private SimpleMailMessage mailMessage;
 	public SimpleMailMessage sendVerifyEmail(String receiveAddress, String captcha) {
 
+		//如果邮箱格式不正确
+		if (FormatValidation.vaildBindEmailAddress(receiveAddress).equals("验证成功") == false )
+			return null;
 		try {
 			mailMessage.setSubject("OW旅游网站验证码邮件"); //设置邮件标题
 			mailMessage.setText("尊敬的用户：\n\n您的邮箱绑定验证码为："+
@@ -82,7 +86,7 @@ public class UserDaoImpl implements UserDao{
 		return mailMessage;
 	}
 
-	public int updateUserInfo(User user) {
+	public Integer updateUserInfo(User user) {
 		
 		String sql = UPDATE_USER_SQL + " WHERE userId = ?";
 		Object args[] = {

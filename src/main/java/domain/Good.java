@@ -51,5 +51,17 @@ public class Good implements Serializable{
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
+	public double getUnitPrice() {
+		return unitPrice;
+	}
+	public void setUnitPrice(double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+	@Override
+	public String toString() {
+		return "Good [goodId=" + goodId + ", goodName=" + goodName + ", goodType=" + goodType + ", pictureSrc="
+				+ pictureSrc + ", amount=" + amount + ", unitPrice=" + unitPrice + "]";
+	}
+	
 	
 }

@@ -5,6 +5,11 @@ import java.util.Map;
 
 public class FormatValidation {
 
+	/***
+	 *	验证邮箱格式
+	 * @param receiveAddress
+	 * @return 若验证成功，返回一个字符串"验证成功"
+	 */
 	public static String vaildBindEmailAddress(String receiveAddress){
 		String emailRegeXp = "([a-z0-9_\\.-]{2,15})@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})";
 		//判断输入的邮箱是否为空

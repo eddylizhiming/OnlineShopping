@@ -21,9 +21,23 @@ public interface GoodService {
 	 */
 	public Page<Good> searchGoodsByCondition(int typeId, String goodCondition, int pageNo);
 	/***
-	 * 通过制定的Id查找商品
+	 * 通过指定的Id查找商品
 	 * @param goodId
 	 * @return 查找不到返回null
 	 */
 	public Good findGoodById(String goodId);
+	
+	public boolean deleteGoodById(String goodId);
+	/**
+	 * 更新商品的信息。。
+	 * @param good
+	 * @return
+	 */
+	public boolean updateGoodInfo(Good good);
+	/**
+	 * 添加商品
+	 * @param good
+	 * @return 添加成功返回true
+	 */
+	public boolean insertGood(Good good);
 }

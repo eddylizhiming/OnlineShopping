@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dao.UserDao;
+import domain.Good;
 import domain.User;
 
 @Service
@@ -18,7 +19,9 @@ public class UserServiceImpl implements UserService {
 		return user != null;
 	}
 	public boolean insertUser(User user) {
-		
+		//如果用户存在。。
+		if (isUserExist(user.getUserId())) 
+			return false;
 		return userDao.insertUser(user) > 0 ? true : false;
 	}
 	public boolean hasMatchUser(String userId, String password) {
@@ -36,7 +39,7 @@ public class UserServiceImpl implements UserService {
 		return this.updateUserInfo(user);
 	}
 	public boolean updateUserInfo(User user) {
-		
+		if (userDao.findUserByUserId(user.getUserId()) == null) return false;
 		return userDao.updateUserInfo(user) > 0 ?  true : false;
 	}
 	public User findUserByUserId(String userId) {

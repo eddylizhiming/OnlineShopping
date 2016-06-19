@@ -26,4 +26,21 @@ public class GoodServiceImpl implements GoodService{
 		return goodDao.findGoodById(goodId);
 	}
 
+	public boolean deleteGoodById(String goodId) {
+		if (goodDao.findGoodById(goodId) == null) return false;
+		return goodDao.deleteGoodById(goodId) > 0;
+	}
+
+	public boolean updateGoodInfo(Good good) {
+		if (goodDao.findGoodById(good.getGoodId()) == null)
+			return false;
+		return goodDao.updateGoodInfo(good) > 0;
+	}
+
+	public boolean insertGood(Good good) {
+		if(goodDao.findGoodById(good.getGoodId()) != null)
+			return false;
+		return goodDao.insertGood(good) > 0;
+	}
+
 }

@@ -39,16 +39,23 @@ public class ShoppingCarServiceImpl implements ShoppingCarService{
 	}
 
 	public boolean removeGoodFromCar(String userId, String goodId) {
-		
+		//如果用户没有买商品，就直接return
+		if(shoppingCarDao.getUserBoughtGood(userId, goodId) == null)
+			return false;
 		return shoppingCarDao.removeGoodFromCar(userId, goodId) > 0;
 	}
 
 	public boolean addGoodsBoughtNum(String userId, String goodId, int buyNum) {
+		if(shoppingCarDao.getUserBoughtGood(userId, goodId) == null) return false;
+		
 		return shoppingCarDao.addGoodsBoughtNum(userId, goodId, buyNum) > 0;
 	}
 
 	public boolean alterGoodsBoughtNum(String userId, String goodId, int buyNum) {
+		if(shoppingCarDao.getUserBoughtGood(userId, goodId) == null) return false;
 		return shoppingCarDao.alterGoodsBoughtNum(userId, goodId, buyNum) > 0;
 	}
+
+
 
 }

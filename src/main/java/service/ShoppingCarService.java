@@ -23,6 +23,13 @@ public interface ShoppingCarService {
 	 * @return 修改成功返回true
 	 */
 	public boolean addGoodsBoughtNum(String userId, String goodId, int buyNum);
-	
+	/**
+	 * 修改用户已购买某商品的数量
+	 * @param userId
+	 * @param goodId
+	 * @param buyNum
+	 * @return
+	 */
 	public boolean alterGoodsBoughtNum(String userId, String goodId, int buyNum);
+	
 }

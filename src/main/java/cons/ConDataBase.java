@@ -34,5 +34,11 @@ public class ConDataBase {
 	public final static String ALTER_USER_BOUGHT_GOODS_NUM_SQL = " UPDATE tb_shoppingCar SET amount = ? "
 			+ " WHERE userId = ? AND goodId = ? ";
 	public final static String REMOVE_GOOD_FROM_CAR_SQL = " DELETE FROM tb_shoppingCar WHERE userId = ? AND goodId = ? ";
+	public final static String DELETE_GOOD_BY_ID_SQL = " DELETE FROM tb_goods WHERE goodId = ? ";
+	public final static String UPDATE_GOOD_SQL = "UPDATE tb_goods SET goodName = :goodName,"
+		 	+ " goodType = :goodType, pictureSrc = :pictureSrc, unitPrice = :unitPrice, amount = :amount"
+		 	+ " WHERE goodId = :goodId ";
 	
+	public final static String INSERT_GOOD_SQL = "INSERT INTO tb_goods (goodId, goodName, goodType, pictureSrc, amount) "
+			+ " VALUES(:goodId, :goodName, :goodType, :pictureSrc, :amount) ";
 }

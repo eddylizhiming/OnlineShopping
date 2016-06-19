@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UploadOperation {
@@ -77,9 +78,22 @@ public class UploadOperation {
 	 * @param prefix : 文件后缀名
 	 * @return
 	 */
-	public static String getUploadPath(String rootPath, String userId, String prefix){
+	public static String getUserUploadPath(String rootPath, String userId, String prefix){
 		String filePath = getUserDirPath(rootPath, userId) + "headScul." + prefix;
 
+		return filePath;
+	}
+	
+	/***
+	 * 获取管理员上传商品图片的文件的路径，为web根目录下的uploads+goodTypes+类型Id+文件名
+	 * @param rootPath : web根目录
+	 * @param userId : 用户的Id
+	 * @param prefix : 文件后缀名
+	 * @return
+	 */
+	public static String getAdminUploadGoodPicPath(String rootPath, String typeId, String fileName){
+		String filePath = getAdminDirPath(rootPath, typeId)  + fileName;
+		//在这里可以更换文件名称
 		return filePath;
 	}
 	
@@ -90,12 +104,24 @@ public class UploadOperation {
 	 * @return
 	 */
 	public static String getUserDirPath(String rootPath, String userId){
-		String userDirPath = rootPath + File.separatorChar + "uploads" + File.separatorChar
+		String userDirPath = rootPath + "uploads" + File.separatorChar
 				+ userId + File.separatorChar;
 
 		return userDirPath;
 	}
 	
+	/**
+	 * 获取管理员上传商品文件夹的路径
+	 * @param rootPath
+	 * @param userId
+	 * @return
+	 */
+	public static String getAdminDirPath(String rootPath, String typeId){
+		String userDirPath = rootPath + "uploads" + File.separatorChar
+				+ "goodTypes" + File.separatorChar + typeId + File.separatorChar;
+
+		return userDirPath;
+	}
 	/***
 	 * 获取用户上传信息，包括web根目录、上传的文件名、文件扩展名
 	 * @param request
@@ -103,7 +129,7 @@ public class UploadOperation {
 	 * @param userId
 	 * @return
 	 */
-	public static Map<String, String> getUploadInfos(HttpServletRequest request, MultipartFile headScul, String userId){
+	public static Map<String, String> getUserUploadInfos(HttpServletRequest request, MultipartFile headScul, String userId){
 		Map<String, String> infos = new HashMap<String, String>();
 		
 		//获取web根目录
@@ -116,7 +142,7 @@ public class UploadOperation {
 		String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
 		String userDirPath = UploadOperation.getUserDirPath(rootPath, userId);
 		//文件路径，上传到用户独立的文件夹，如uploads/1072842511，表示用户Id为1072842511上传的图片
-		String filePath = UploadOperation.getUploadPath(rootPath, userId, prefix);
+		String filePath = UploadOperation.getUserUploadPath(rootPath, userId, prefix);
 		
 		infos.put("rootPath", rootPath);
 		infos.put("fileName", fileName);
@@ -124,5 +150,44 @@ public class UploadOperation {
 		infos.put("userDirPath", userDirPath);
 		infos.put("filePath", filePath);
 		return infos;
+	}
+	
+	/***
+	 * 获取管理员上传商品信息，包括web根目录、上传的文件名、文件扩展名
+	 * @param request
+	 * @param headScul
+	 * @param userId
+	 * @return
+	 */
+	public static Map<String, String> getAdminUploadGoodInfos(HttpServletRequest request, MultipartFile headScul, String typeId){
+		Map<String, String> infos = new HashMap<String, String>();
+		
+		//获取web根目录
+		String rootPath = UploadOperation.getContextPath(request); 
+		//从session中获取登录的User实例
+	
+		//上传的文件名
+		String fileName = headScul.getOriginalFilename();
+		//文件扩展名
+		String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
+		String userDirPath = UploadOperation.getAdminDirPath(rootPath, typeId);
+		//文件路径，上传到用户独立的文件夹，如uploads/1072842511，表示用户Id为1072842511上传的图片
+		String filePath = UploadOperation.getAdminUploadGoodPicPath(rootPath, typeId, prefix);
+		
+		infos.put("rootPath", rootPath);
+		infos.put("fileName", fileName);
+		infos.put("prefix", prefix);
+		infos.put("userDirPath", userDirPath);
+		infos.put("filePath", filePath);
+		return infos;
+	}
+	
+	public static String getFilePrefix(String fileName)
+	{
+		String prefix = fileName.substring(fileName.lastIndexOf(".")+1);
+		return prefix;
+	}
+	public static void main(String[] args) {
+		
 	}
 }

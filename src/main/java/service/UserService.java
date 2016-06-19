@@ -1,5 +1,6 @@
 package service;
 
+import domain.Good;
 import domain.User;
 
 public interface UserService {
@@ -45,4 +46,5 @@ public interface UserService {
 	boolean updateHeadscul(String userId, String fileName);
 	
 	User findUserByUserId(String userId);
+
 }
