@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <%@ taglib prefix="pager"  tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -44,6 +45,8 @@ window.onload = showSearchResult();
 		</div>
 	</c:forEach>
 	
-	<pager:PageBar pageUrl="/good/searchGoods/" pageAttrKey="goodsPaged"></pager:PageBar>
+	<c:if test="${fn:length(goods) > 0}">
+		<pager:PageBar pageUrl="/good/searchGoods/" pageAttrKey="goodsPaged"></pager:PageBar>
+	</c:if>
 </body>
 </html>

@@ -238,11 +238,23 @@
 		<version>1.6.2</version>
 	</dependency>
     
-    <!-- 在junit中使用事务要用 -->
+    <!-- 在Junit中使用事务要用 -->
     <dependency>
 	    <groupId>cglib</groupId>
 	    <artifactId>cglib</artifactId>
 	    <version>2.2.2</version>
+	</dependency>
+	<!-- Joda，易于使用的开源时间/日期库 -->
+	<dependency>
+		<groupId>joda-time</groupId>
+		<artifactId>joda-time</artifactId>
+		<version>2.3</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.apache.poi</groupId>
+		<artifactId>poi</artifactId>
+		<version>3.9</version>
 	</dependency>
     
 	</dependencies>

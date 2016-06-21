@@ -23,7 +23,6 @@ public class ShoppingCarDaoImpl extends BaseDaoImpl implements ShoppingCarDao{
 	
 	public Integer addToCar(String userId, String goodId, int buyNum) {
 
-		String sql = INSERT_SHOPPING_CAR_SQL;
 
 		ShoppingCar shoppingCar = new ShoppingCar();
 		shoppingCar.setUserId(userId);
@@ -31,33 +30,29 @@ public class ShoppingCarDaoImpl extends BaseDaoImpl implements ShoppingCarDao{
 		shoppingCar.setAmount(buyNum);
 		
 		SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(shoppingCar);
-		return namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+		return namedParameterJdbcTemplate.update(INSERT_SHOPPING_CAR_SQL, sqlParameterSource);
 	}
 	
 	public Good getUserBoughtGood(String userId, String goodId) {
-		String sql = SELECT_USER_HAS_BUY_GOOD_SQL;
 		Object args[] = {userId, goodId};
 		
-		return oneOrNull(jdbcTemplate.query(sql, args, new BeanPropertyRowMapper<Good>(Good.class)));
+		return oneOrNull(jdbcTemplate.query(SELECT_USER_HAS_BUY_GOOD_SQL, args, new BeanPropertyRowMapper<Good>(Good.class)));
 	}
 	
 	public int addGoodsBoughtNum(String userId, String goodId, int buyNum){
-		String sql = ADD_USER_BOUGHT_GOODSNUM_SQL;
 		Object args[] = {buyNum, userId, goodId};
 		
-		return jdbcTemplate.update(sql, args);
+		return jdbcTemplate.update(ADD_USER_BOUGHT_GOODSNUM_SQL, args);
 	}
 
 	public Integer removeGoodFromCar(String userId, String goodId) {
-		String sql = REMOVE_GOOD_FROM_CAR_SQL;
 		Object args[] = { userId, goodId};
-		return jdbcTemplate.update(sql, args);
+		return jdbcTemplate.update(REMOVE_GOOD_FROM_CAR_SQL, args);
 	}
 
 	public int alterGoodsBoughtNum(String userId, String goodId, int buyNum) {
-		String sql = ALTER_USER_BOUGHT_GOODS_NUM_SQL;
 		Object args[] = {buyNum, userId, goodId};
 		
-		return jdbcTemplate.update(sql, args);
+		return jdbcTemplate.update(ALTER_USER_BOUGHT_GOODS_NUM_SQL);
 	}
 }

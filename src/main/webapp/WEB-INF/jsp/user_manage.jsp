@@ -43,7 +43,7 @@
 	
 	用户的头像：<img alt="头像" src="<c:url value = '/${userHeadSrc}'/>"/>
 	<br/>
-	<%=request.getSession().getServletContext().getRealPath("/") %>
+
 	绑定邮箱<br/>
 	<br/><br/>
 	

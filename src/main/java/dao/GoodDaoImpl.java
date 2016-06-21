@@ -14,7 +14,7 @@ import domain.Good;
 import tool.Page;
 
 @Repository
-public class GoodDaoImpl implements GoodDao{
+public class GoodDaoImpl extends BaseDaoImpl implements GoodDao{
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -36,13 +36,6 @@ public class GoodDaoImpl implements GoodDao{
 		return new Page<Good>(startIndex, totalCount, pageSize, data);
 	}
 	
-	private <T> T oneOrNull(List<T> list) {
-		if (list == null || list.size() == 0) {
-			return null;
-		} else {	
-			return list.get(0);
-		}
-	}
 
 	public Page<Good> searchGoodsByCondition(int typeId, String goodCondition, int pageNo) {
 		//条件搜索的商品总数，貌似解决不了占位符并条件搜索的问题。。
@@ -66,7 +59,7 @@ public class GoodDaoImpl implements GoodDao{
 			return new Page<Good>();
 
 		//搜索的结果从第一页展示，采用默认大小
-		int startIndex = Page.getStartOfPage(pageNo, Page.DEFAULT_PAGE_SIZE);
+		long startIndex = Page.getStartOfPage(pageNo, Page.DEFAULT_PAGE_SIZE);
 		
 		select_search_goods_sql += " LIMIT ?, ?";
 		//limit从0开始
@@ -77,10 +70,9 @@ public class GoodDaoImpl implements GoodDao{
 	}
 
 	public Good findGoodById(String goodId) {
-		String sql = SELECT_GOOD_BY_ID_SQL ;
 		Object args[] = { goodId };
 
-		return oneOrNull(jdbcTemplate.query(sql, args, new BeanPropertyRowMapper<Good>(Good.class)));
+		return oneOrNull(jdbcTemplate.query(SELECT_GOOD_BY_ID_SQL, args, new BeanPropertyRowMapper<Good>(Good.class)));
 	}
 
 	public Integer deleteGoodById(String goodId) {

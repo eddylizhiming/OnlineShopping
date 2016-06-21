@@ -1,5 +1,7 @@
 package daoTest;
 
+import static junit.framework.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import dao.GoodDao;
 import domain.Good;
 import junit.framework.Assert;
-import service.UserService;
-
-import static junit.framework.Assert.*;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class) 
@@ -64,6 +63,6 @@ public class TestGoodDao {
 		good.setGoodType("2");
 		good.setAmount(10);
 		good.setPictureSrc("aoErLiang.jpg");
-		Assert.assertTrue(  goodDao.insertGood(good) == 1);
+		Assert.assertTrue(goodDao.insertGood(good) == 1);
 	}
 }

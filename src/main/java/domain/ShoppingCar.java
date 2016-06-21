@@ -11,7 +11,7 @@ public class ShoppingCar implements Serializable{
 	
 	private String userId;
 	private String goodId;
-	private int amount;
+	private Integer amount;
 	
 	public String getUserId() {
 		return userId;
@@ -25,10 +25,10 @@ public class ShoppingCar implements Serializable{
 	public void setGoodId(String goodId) {
 		this.goodId = goodId;
 	}
-	public int getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
-	public void setAmount(int amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
 	

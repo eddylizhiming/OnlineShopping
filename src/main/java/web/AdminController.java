@@ -214,12 +214,11 @@ public class AdminController {
 		}
 		
 		if (goodService.updateGoodInfo(good) == true){
-			System.out.println("abcdefg");
 			modelMap.put("updateGoodResult", "更新成功");
 			request.setAttribute("typeId", good.getGoodType());
 			return aimUrl;
 		}
-		System.out.println("hijklmn");
+		
 		request.setAttribute("typeId", goodService.findGoodById(good.getGoodId()));
 		modelMap.put("updateGoodResult", "更新失败");
 		return aimUrl;

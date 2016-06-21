@@ -3,11 +3,8 @@ package tool;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UploadOperation {

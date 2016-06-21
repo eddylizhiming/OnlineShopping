@@ -21,7 +21,7 @@ import domain.User;
 import tool.FormatValidation;
 
 @Repository
-public class UserDaoImpl implements UserDao{
+public class UserDaoImpl extends BaseDaoImpl implements UserDao{
 
 	//日志记录器
 	private static Logger logger = Logger.getLogger(UserDaoImpl.class);
@@ -31,35 +31,22 @@ public class UserDaoImpl implements UserDao{
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	public User findUserByUserId(String userId) {
-		String sql = SELECT_USER_SQL + " WHERE userId = ?";
 		Object args[] = {userId};
 		
-		return oneOrNull(jdbcTemplate.query(sql, args, new BeanPropertyRowMapper<User>(User.class)));
+		return oneOrNull(jdbcTemplate.query(SELECT_USER_SQL, args, new BeanPropertyRowMapper<User>(User.class)));
 	}
 
-	/**
-	 * 判断是否有匹配条件的返回值，若有返回一个实例，若没有Null
-	 * @param list 使用query查询出来的列表
-	 */
-	private <T> T oneOrNull(List<T> list) {
-		if (list == null || list.size() == 0) {
-			return null;
-		} else {	
-			return list.get(0);
-		}
-	}
+
+
 
 
 	public Integer insertUser(User user) {
 		//设置用户默认头像为defaultHead.jpg
 		user.setHeadScul("defaultHead.jpg");
+		
 		//使用具名参数，让bean属性与sql参数进行对应，这里是User
-		System.out.println(user.getBalance());
-		System.out.println(user.getEmail());
-		String sql = INSERT_USER_SQL + " VALUES(:userId, :userName, :password, :balance, :email, :headScul) ";
-
 		SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(user);
-		return namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+		return namedParameterJdbcTemplate.update(INSERT_USER_SQL, sqlParameterSource);
 	}
 	//发送验证邮件
 	@Autowired
@@ -88,7 +75,6 @@ public class UserDaoImpl implements UserDao{
 
 	public Integer updateUserInfo(User user) {
 		
-		String sql = UPDATE_USER_SQL + " WHERE userId = ?";
 		Object args[] = {
 				user.getUserName(),
 				user.getPassword(),
@@ -99,6 +85,6 @@ public class UserDaoImpl implements UserDao{
 				user.getUserId()
 		};
 		
-		return jdbcTemplate.update(sql, args);
+		return jdbcTemplate.update(UPDATE_USER_SQL, args);
 	}
 }

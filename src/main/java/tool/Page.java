@@ -13,7 +13,8 @@ public class Page<T> {
 
 	public static final int DEFAULT_PAGE_SIZE = 4;
 	public static final String DEFAULT_PAGE_SIZE_STRING = "4";
-
+	public final static String DEFAULT_ORDER_PAGE_SIZE = "5";
+	
 	private int pageSize = DEFAULT_PAGE_SIZE; // 每页的记录数
 
 	private long start; // 当前页第一条数据在List中的位置,从0开始

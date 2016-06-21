@@ -1,6 +1,5 @@
 package service;
 
-import domain.Good;
 import domain.User;
 
 public interface UserService {

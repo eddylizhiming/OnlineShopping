@@ -47,11 +47,11 @@ public class UserController {
 		return new LoginingUser();
 	}
 
-	@RequestMapping(value="/login", method=RequestMethod.GET)
+	@RequestMapping(value="/index")
 	public String forwardLogin(HttpServletRequest request){
 		//直接输入地址的话，清除session中的验证码属性
 		//		request.getSession().removeAttribute("captcha");
-		return "loginAndRegister";
+		return "index";
 	}
 
 	/****
@@ -67,14 +67,13 @@ public class UserController {
 			HttpServletResponse response){
 		logger.info("sbs");
 		logger.debug("记住的天数：" + rememberd_days);
-
 		if (loginedUser.getUserId().equals("")){
 			request.setAttribute("loginError", "用户名不能为空");
-			return "loginAndRegister";
+			return "index";
 		}
 		//有校验错误直接返回登录页
-		if (bindingResult.hasErrors())
-			return "loginAndRegister";
+		if (bindingResult.hasErrors())         
+			return "index";
 		//			System.out.println("用户登录信息格式有错误");
 		else
 			logger.info("用户登录信息格式无错误");
@@ -125,7 +124,7 @@ public class UserController {
 		else {
 			logger.info("有用户登录失败。");
 			request.setAttribute("loginError", "用户名或密码不正确");
-			return "loginAndRegister";
+			return "index";
 		}
 
 	}
@@ -199,7 +198,7 @@ public class UserController {
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public String forwardReigister(HttpServletRequest request){
 
-		return "loginAndRegister";
+		return "index";
 	}
 
 	/****
@@ -218,7 +217,7 @@ public class UserController {
 		{
 			flag = false;
 			request.setAttribute("createInfo", "用户名不能为空");
-			return "loginAndRegister";
+			return "index";
 		}
 		
 		//如果密码不等于确认密码
@@ -240,10 +239,10 @@ public class UserController {
 		if (userService.isUserExist(user.getUserId())){
 			request.setAttribute("createInfo", "该用户名已注册\n");
 			logger.error("发生了同步注册的情况。");
-			return "loginAndRegister";
+			return "index";
 		}
 		
-		if (flag == false) return "loginAndRegister";
+		if (flag == false) return "index";
 		
 		//插入用户操作
 		if ( userService.insertUser(user) ){	
@@ -257,7 +256,7 @@ public class UserController {
 		{
 			request.setAttribute("createInfo", "因为某些原因，注册失败。。\n");
 			logger.error("创建用户失败。。");
-			return "loginAndRegister";
+			return "index";
 		}
 
 	}

@@ -69,9 +69,14 @@
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="statusCodes">
 			<props>
-				<!-- 404转至web.xml中配置 -->
-				<prop key="errors/404">404</prop>
+				<!-- HTTP错误码web.xml中配置 -->
+				<prop key="/OnlineShopping/jsp/exception/500.jsp">500</prop>
 			</props>
 		</property>
 	</bean>
+	
+	<!-- bean名称的视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="10"></bean>
+	<!-- 订单列表的Excel -->
+	<bean id = "orderList" class="web.OrderListExcel"/>
 </beans>

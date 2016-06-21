@@ -4,13 +4,17 @@ body, div {
     padding: 0;
 }
 body {
-    background: url("../images/error_bg.jpg") repeat-x scroll 0 0 #67ACE4;
+    background: url("../images/error_bg.jpg") scroll 0 0 #67ACE4;
+	background-size:auto;
 }
 #container {
     margin: 0 auto;
     padding-top: 50px;
     text-align: center;
     width: 560px;
+	
+	position:relative;
+	
 }
 #container img {
     border: medium none;
@@ -32,6 +36,22 @@ body {
     background: url("../images/error_cloud.png") repeat-x scroll 0 0 transparent;
     bottom: 0;
     height: 170px;
-    position: absolute;
+	
+	z-index:-1;
+	
+	position:fixed;
+	
     width: 100%;
+}
+
+.png1{
+	width:50%;
+}
+
+.png1 msg{
+	width:50%;
+}
+
+.png2{
+	width:20%;
 }
