@@ -1,5 +1,6 @@
 package web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import domain.Order;
 import service.OrderService;
 import tool.Page;
 
 @Controller
+@SessionAttributes("orders")
 @RequestMapping("/order")
 public class OrderController {
 	
@@ -32,7 +35,6 @@ public class OrderController {
 	{
 		Page<Order> pageResult = orderService.getPageOrders(pageNo, pageSize);
 		List<Order> orders = pageResult.getResult();
-		
 		modelMap.put("pageResult", pageResult);
 		modelMap.put("orders", orders);
 		modelMap.put("pageSize", pageSize);
@@ -62,7 +64,6 @@ public class OrderController {
 	//批量更新
 	@RequestMapping(value="batchUpdate")
 	public String bulkUpdateOrders(ModelMap modelMap, @RequestBody List<Order> orders){
-		System.out.println(orders.size());
 		List<String> updateInfos =orderService.batchUpdateOrders(orders);
 		modelMap.put("updateInfos", updateInfos);
 		return "forward:manage";
@@ -81,5 +82,29 @@ public class OrderController {
 		modelMap.put("pageSize", pageSize);
 		
 		return "order_manage";
+	}
+	
+	//输出订单Excel
+	@RequestMapping(value="orderListExcel2")
+	public String getOrderListExcel(ModelMap modelMap){
+		List<Order> orders = (List<Order>) modelMap.get("orders");
+		modelMap.put("orders", orders);
+		return "orderListExcel";
+	}
+	
+	//输出订单PDF
+	@RequestMapping(value="orderListPdf2")
+	public String getOrderListPdf(ModelMap modelMap){
+		List<Order> orders = (List<Order>) modelMap.get("orders");
+		modelMap.put("orders", orders);
+		return "orderListPdf";
+	}
+	
+	//输出订单XML
+	@RequestMapping(value="orderListXml2")
+	public String getOrderListXml(ModelMap modelMap){
+		List<Order> orders = (List<Order>) modelMap.get("orders");
+		modelMap.put("orders", orders);
+		return "orderListXml";
 	}
 }

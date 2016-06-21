@@ -331,26 +331,22 @@ public class UserController {
 	}
 
 	//绑定邮箱操作
+	@ResponseBody
 	@RequestMapping(value = "manage/bindEmail", method=RequestMethod.POST)
 	public String bindUserEmail(@RequestParam("emailCaptcha") String userInputCode, 
 			String receiveAddress, HttpServletRequest request){
-		
+		System.out.println(userInputCode);
 		//把邮箱地址放入request中
 		request.setAttribute("emailAddress", receiveAddress);
 
 		//验证邮箱格式
 		String validEmailResult = FormatValidation.vaildBindEmailAddress(receiveAddress);
-		if (validEmailResult.equals("验证成功") == false){
-			request.setAttribute("bindResult", validEmailResult);
-			return "user_manage";
-		}
+		if (validEmailResult.equals("验证成功") == false)
+			return validEmailResult;
 		
 		//先判断是否为null，短路运算符
 		if (userInputCode != null && userInputCode.equals(""))
-		{
-			request.setAttribute("bindResult", "请输入验证码");
-			return "user_manage";
-		}
+			return "请输入验证码";
 
 		//获取服务器端产生的验证码及服务器发送的邮箱地址
 		String realEmailCode = (String) request.getSession().getAttribute("emailCaptcha");
@@ -359,10 +355,7 @@ public class UserController {
 		//如果用户输入的邮箱地址和服务器发送的邮箱地址相同
 		//防止先获取了验证码，再使用其他的邮箱绑定
 		if (serverSendAddress != null && !receiveAddress.equals(serverSendAddress))
-		{
-			request.setAttribute("bindResult", "发送邮件的邮箱和要绑定的邮箱不同");
-			return "user_manage";
-		}
+			return "发送邮件的邮箱和要绑定的邮箱不同";
 
 		logger.info("邮件验证码：" + realEmailCode);
 		logger.info("用户输入的验证码：" + userInputCode);
@@ -375,23 +368,22 @@ public class UserController {
 			String userId = user.getUserId();
 			//进行绑定操作
 			if (userService.bindEmail(userId, receiveAddress) == true){
-				request.setAttribute("bindResult", "邮箱绑定成功");
 				//绑定成功的话，将属性从session中移除
 				request.getSession().removeAttribute("emailCaptcha");
 				request.getSession().removeAttribute("emailAddress");
 				//更新session中登录用户的信息
 				request.getSession().setAttribute("loginedUser", userService.findUserByUserId(userId));
 				logger.info(userId + "用户邮箱绑定成功");
+				return "邮箱绑定成功";
 			}
 			else
 			{
 				logger.info(userId + "绑定邮箱失败");
-				request.setAttribute("bindResult", "邮箱绑定失败");
+				return "邮箱绑定失败";
 			}
 		}else {
-			request.setAttribute("bindResult", "验证码不正确，请确认");
+			return "验证码不正确，请确认";
 		}
-		return "user_manage";
 	}
 	//上传头像
 	@RequestMapping(value="manage/upHeadScul")

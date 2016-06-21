@@ -31,7 +31,17 @@
 		<property name="mediaTypes">
 			<map>
 				<entry key="html" value="text/html"></entry>
+				<entry key="xml" value="application/xml"></entry>
+				<entry key="json" value="application/json"></entry>
 			</map>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"
+					p:renderedAttributes="orders"/>
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView"
+					p:modelKey="orders" p:marshaller-ref="xmlMarshaller"/>
+			</list>
 		</property>
 	</bean>	 
 	<!-- 默认视图解析器，如JSP等文件由它负责 -->
@@ -78,5 +88,23 @@
 	<!-- bean名称的视图解析器 -->
 	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="10"></bean>
 	<!-- 订单列表的Excel -->
-	<bean id = "orderList" class="web.OrderListExcel"/>
+	<bean id = "orderListExcel" class="web.OrderListExcel"/>
+	<bean id = "orderListPdf" class="web.OrderListPdf"/>
+	<!-- 订单列表XML形式 -->
+	<bean id="orderListXml" class="org.springframework.web.servlet.view.xml.MarshallingView"
+		p:modelKey="orders"
+		p:marshaller-ref="xmlMarshaller">
+		
+	</bean>
+	<!-- XML编组器 -->
+	<bean id="xmlMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+		<property name="streamDriver">
+			<bean class="com.thoughtworks.xstream.io.xml.StaxDriver" />
+		</property>
+		<property name="annotatedClasses">
+			<list>
+				<value>domain.Order</value>
+			</list>
+		</property>
+	</bean>
 </beans>

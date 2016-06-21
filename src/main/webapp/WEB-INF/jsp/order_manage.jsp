@@ -25,6 +25,20 @@
 		orderForm.action = "/OnlineShopping/order/batchUpdate";
 		orderForm.submit();
 	}
+	//保存为Excel格式
+	function saveAsExcel() {
+	
+		window.location = "/OnlineShopping/order/orderListExcel2";
+	}
+	//保存为PDF格式
+	function saveAsPdf() {
+		window.location = "/OnlineShopping/order/orderListPdf2";
+	}
+	
+	//保存为XML格式
+	function saveAsXml() {
+		window.location = "/OnlineShopping/order/orderListXml2";
+	}
 </script>
 
 </head>
@@ -63,12 +77,18 @@
 		<input type="submit" value="查询">
 	</form:form>
 	
-	<!-- 分页栏，获取list长度 -->
+	<!-- 分页栏，获取list长度，如果没有订单，不显示分页栏 -->
 	<c:if test="${fn:length(orders) > 0}">
 		<pager:PageBar pageUrl="/order/manage" pageAttrKey="ordersPaged"></pager:PageBar>
 	</c:if>
 	<c:if test="${fn:length(orders) <= 0}">
 		没有您要查询的商品
 	</c:if>
+	
+	<button type="button" onclick="saveAsExcel()">保存为Excel</button>
+	<button type="button" onclick="saveAsPdf()">显示或保存为PDF</button>
+<!-- 	<button type="button" onclick="saveAsXml()">显示为XML</button>-->
+	<a href="?content=xml" target="_blank">显示为XML</a>
+	<a href="?content=json" target="_blank">显示或保存为JSON</a>
 </body>
 </html>
