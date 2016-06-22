@@ -55,7 +55,6 @@ public class AdminController {
 	public Good getGood(ModelMap modelMap)
 	{
 		Good good = (Good) modelMap.get("good") ;
-		System.out.println(good.getGoodName());
 		return good;
 	}
 	

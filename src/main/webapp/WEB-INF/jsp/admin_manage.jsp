@@ -46,7 +46,7 @@ pageEncoding="UTF-8"%>
         }
     </style>
 </head>
-<body>
+<body onload="onload()">
 <c:choose>
     <c:when test="${loginedUser.headScul  == 'defaultHead.jpg'}">
         <c:set var="userHeadSrc">images/defaultHead.jpg</c:set>
@@ -101,15 +101,22 @@ pageEncoding="UTF-8"%>
         <div class="form-group">
             <label class="col-sm-3 control-label"> 头像： </label>
             <div class="col-sm-6">
-                <input type="file" name="newHeadScul" class="control-label"
-                       onchange="preview(this,'previewHeadSculPic')"
-                       onclick="fadeInElement('#previewHeadSculPicGroup')"/>
+                <img src="" id="headScul" class="preview"/>
             </div>
             <div class="col-sm-3">
                 <button type="button" onclick="validAndUpdate()"
                         class="btn btn-link">修改用户头像
                 </button>
                 <input type="hidden" id="userId2" name="userId2"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label"> 更改头像： </label>
+            <div class="col-sm-6">
+                <input type="file" name="newHeadScul" class="control-label"
+                       onchange="preview(this,'previewHeadSculPic')"
+                       onclick="fadeInElement('#previewHeadSculPicGroup')"/>
             </div>
         </div>
 
@@ -131,9 +138,22 @@ pageEncoding="UTF-8"%>
 
 
         <div class="form-group">
-            <img src="" id="headScul"/>
+            <p class="text-center">
+                <i class="fa fa-bullhorn fa-2x"></i>
+                &nbsp;
+                <i class="fa fa-2x"> 用户群广播</i>
+            </p>
         </div>
-     
+        <div class="form-group">
+            <label class="col-sm-3 control-label"> 广播消息： </label>
+            <div class="col-sm-6">
+                <input id="broadcast" class="form-control"/>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-link"  onclick="sendMsg()">广播
+                </button>
+            </div>
+        </div>
     </form>
 
     <form:form id="goodForm" modelAttribute="good" method="post"
@@ -244,12 +264,18 @@ pageEncoding="UTF-8"%>
             </div>
         </div>
 
-      
     </form:form>
 </div>
+
+<script type="text/javascript" src="/OnlineShopping/dwr/engine.js"></script>
+<script type="text/javascript" src="/dwr/util.js"></script>  
+<script type="text/javascript" src="/dwr/interface/SendMsg.js"></script> 
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+	function onload(){	
+		dwr.engine.setActiveReverseAjax(true);
+	}
     //查询用户信息
     function queryUserInfo() {
         $.post("/OnlineShopping/admin/queryUserInfo",
@@ -261,7 +287,7 @@ pageEncoding="UTF-8"%>
                     if (data == "")
                         alert("没有该用户");
                     else {
-                    	alert("查询到了用户");
+                        alert("查询到了用户");
                         var info = data.split('&')
 
                         if (info[1] == 'defaultHead.jpg')
@@ -321,11 +347,11 @@ pageEncoding="UTF-8"%>
         showUpdateGoodResult();
         //执行显示添加商品结果
         showInsertGoodResult();
-        
+
         //上传头像结果
         if ("${updateHeadResult}" != null && "${updateHeadResult}" != "")
             alert("${updateHeadResult}");
-        
+
     }
 
     //显示添加商品结果
@@ -423,6 +449,10 @@ pageEncoding="UTF-8"%>
         $(Element).fadeIn();
         $(Element).find('.col-sm-offset-3').parent().addClass('form-group');
         $(".container").css('height', documentHeight + 523);
+    }
+    
+    function sendMsg(){
+    	SendMsg.sendMsg('abcdef');
     }
 </script>
 </body>

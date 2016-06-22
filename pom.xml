@@ -281,8 +281,12 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.5.0</version>
 		</dependency>
-
-
+		<!-- DWR,点对多发送消息 -->
+		<dependency>
+			<groupId>org.directwebremoting</groupId>
+			<artifactId>dwr</artifactId>
+			<version>3.0.1-RELEASE</version>
+		</dependency>
 
 	</dependencies>
 

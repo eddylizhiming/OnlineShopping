@@ -3,13 +3,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.directwebremoting.org/schema/spring-dwr      
+        http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
 
 
 	<!-- 扫描web包中标注了@controller的类，放入Spring容器 -->
@@ -93,26 +95,30 @@
 	</bean>
 
 	<!-- 订单列表XML形式 -->
-	<bean id="orderListXml" class="org.springframework.web.servlet.view.xml.MarshallingView"
-		p:modelKey="orders"
-		p:marshaller-ref="xmlMarshaller"/>
-	
-		
+	<bean id="orderListXml"
+		class="org.springframework.web.servlet.view.xml.MarshallingView"
+		p:modelKey="orders" p:marshaller-ref="xmlMarshaller" />
+
+
 	<!-- 配置国际化资源，自动重载 -->
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource"
-		p:basenames="conf/i18n/message, conf/i18n/info"/>
-		
-	<!-- 基于Cookie的时区解析器-->
+		p:basenames="conf/i18n/message, conf/i18n/info" />
+
+	<!-- 基于Cookie的时区解析器 -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.CookieLocaleResolver"
-		p:cookieName="clientLanguage"
-		p:cookieMaxAge="100000"
-		p:cookiePath="/"
-		p:defaultLocale="zh_CN"/>
-	
+		p:cookieName="clientLanguage" p:cookieMaxAge="100000" p:cookiePath="/"
+		p:defaultLocale="zh_CN" />
+
 	<!-- 时区改变拦截器 -->
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"></bean>
 	</mvc:interceptors>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="order" value="1" />
+	</bean>
+	
 </beans>

@@ -19,12 +19,11 @@ pageEncoding="UTF-8"%>
             padding: 0;
         }
 
-        .carousel, .controlIcon, .container,p {
+        .carousel, .container,p {
             position: absolute;
         }
 
         .container .col-sm-6 {
-            background-image: url("http://img2.ph.126.net/PRk3BXbJlQYXjgUeILjRNg==/4856569248267458660.png");
             background-size: cover;
         }
 
@@ -125,19 +124,17 @@ pageEncoding="UTF-8"%>
     <!-- 轮播（Carousel）导航 -->
     <span class="carousel-control left" href="#myCarousel"
           data-slide="prev">
-        <a class="controlIcon">&lsaquo;</a>
     </span>
     <span class="carousel-control right" href="#myCarousel"
           data-slide="next">
-        <a class="controlIcon">&rsaquo;</a>
     </span>
 </div>
 
 <div class="container">
-    <div class="col-sm-6"><span>&nbsp;</span></div>
-    <div class="col-sm-6"><span>&nbsp;</span></div>
-    <div class="col-sm-6"><span>&nbsp;</span></div>
-    <div class="col-sm-6"><span>&nbsp;</span></div>
+    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/clothes.jpg)"><span>&nbsp;</span></div>
+    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/electronics.jpg)"><span>&nbsp;</span></div>
+    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/essentials.jpg)"><span>&nbsp;</span></div>
+    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/food.jpg)"><span>&nbsp;</span></div>
 </div>
 
 <hr size="1" width="90%" color="#000">
@@ -297,17 +294,10 @@ pageEncoding="UTF-8"%>
     <!-- /.modal -->
 </div>
 
-
-<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script>
 
-    //轮播按钮垂直居中
-    function putThisVCenter(Element) {
-        var elementHeight = $(Element).height();
-        var parentHeight = $(Element).parent().height();
-        $(Element).css('top', parentHeight * 0.5 - elementHeight / 2);
-    }
     function locate() {
         $('.carousel-inner img').attr({'width':'100%'});
 
@@ -331,7 +321,6 @@ pageEncoding="UTF-8"%>
 
     //窗口resize
     $(window).resize(function () {
-        putThisVCenter(".controlIcon");
         locate();
     })
 
@@ -344,9 +333,12 @@ pageEncoding="UTF-8"%>
         //do something
         $("#userId").val("${cookie.userId.value}");
         $("#password").val("${cookie.password.value}");
-        putThisVCenter(".controlIcon");
-        locate();
         $('body').css('overflow','hidden');
+        locate();
+    });
+
+    $(window).load(function(){
+        locate();
     });
 
     //更换验证码，加随机数防止缓存
@@ -526,7 +518,7 @@ pageEncoding="UTF-8"%>
         'width': $(window).width(),
         'height': $(window).height()
     });
-    $('#coverImage').fadeIn(2000);
+    //$('#coverImage').fadeIn(2000);
 
     $(window).resize(function () {
         $('#coverImage').attr({
@@ -562,6 +554,13 @@ pageEncoding="UTF-8"%>
     putThisCenter('#login', 0.4);
     putThisCenter('#register', 0.6);
 
+    $('.container').find('.col-sm-6').mouseover(function(){
+        $(this).addClass('filter');
+    });
+
+    $('.container').find('.col-sm-6').mouseout(function(){
+        $(this).removeClass('filter');
+    });
 </script>
 
 </body>

@@ -14,7 +14,7 @@ import dao.OrderDao;
 import domain.Order;
 import junit.framework.Assert;
 
-@Transactional
+//@Transactional
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"file:src/main/webapp/WEB-INF/daoContext.xml"}) 
 public class TestOrderDao {
@@ -49,9 +49,16 @@ public class TestOrderDao {
 		order.setOrderId("OW000001");
 		order.setGoodIds("2");
 		order.setAmounts("10");
-		order.setStatus("已关闭");
+		order.setStatus("未付款");
 		order.setTotal(100);
 		orders.add(order);
+		Order order2 = new Order();
+		order.setOrderId("OW000002");
+		order.setGoodIds("2");
+		order.setAmounts("10");
+		order.setStatus("已完成");
+		order.setTotal(100);
+		orders.add(order2);
 		int[] results = orderDao.batchUpdateOrders(orders);
 		
 		Assert.assertEquals(1, results[0]);
