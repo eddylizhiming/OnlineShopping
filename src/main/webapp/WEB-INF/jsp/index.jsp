@@ -2,6 +2,8 @@
 pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -93,8 +95,8 @@ pageEncoding="UTF-8"%>
             </li>
         </ul>
 
-        <a href="#" data-toggle="modal" data-target="#myModal2" class="navbar-text pull-right" id="register">注册</a>
-        <a href="#" data-toggle="modal" data-target="#myModal1" class="navbar-text pull-right" id="login">登录</a>
+        <a href="#" data-toggle="modal" data-target="#myModal2" class="navbar-text pull-right" id="register"><spring:message code="register"/></a>
+        <a href="#" data-toggle="modal" data-target="#myModal1" class="navbar-text pull-right" id="login"><spring:message code="login"/></a>
     </div>
 </nav>
 
@@ -109,15 +111,15 @@ pageEncoding="UTF-8"%>
     <div class="carousel-inner">
         <div class="item active">
             <img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" alt="First slide">
-            <div class="carousel-caption">标题 1</div>
+            <div class="carousel-caption"><spring:message code="Carousel1"/></div>
         </div>
         <div class="item">
             <img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" alt="Second slide">
-            <div class="carousel-caption">标题 1</div>
+            <div class="carousel-caption"><spring:message code="Carousel2"/></div>
         </div>
         <div class="item">
             <img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" alt="Third slide">
-            <div class="carousel-caption">标题 1</div>
+            <div class="carousel-caption"><spring:message code="Carousel3"/></div>
         </div>
     </div>
     <!-- 轮播（Carousel）导航 -->
@@ -139,7 +141,7 @@ pageEncoding="UTF-8"%>
 </div>
 
 <hr size="1" width="90%" color="#000">
-<p>网站归李志明小组所有</p>
+<p><spring:message code="footer"/></p>
 <img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" id="coverImage" class="filterEffects" style="z-index: 99999">
 
 
@@ -152,42 +154,43 @@ pageEncoding="UTF-8"%>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">登录</h4>
+                <h4 class="modal-title" id="myModalLabel"><spring:message code="login"/></h4>
             </div>
             <div class="modal-body">
                 <!-- 登录表单 -->
                 <form:form modelAttribute="user" role="form" name="loginForm" 
                            class="form-horizontal" method="post">
                     <div class="form-group" id="userIdGroup">
-                        <label class="col-sm-3 control-label">用户名：</label>
+                        <label class="col-sm-3 control-label"><spring:message code="userId"/></label>
                         <div class="col-sm-6">
+                        	<c:set var="userIdNote"><spring:message code='userIdNote'/></c:set>
                             <form:input id="userId" path="userId"
                                         value="${request.user.userId }" class="form-control"
-                                        placeholder="请输入用户名"/>
+                                        placeholder="${userIdNote }"/>
                         </div>
                     </div>
 
                     <div class="form-group" id="passwordGroup">
-                        <label class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
+                        <label class="col-sm-3 control-label"><spring:message code="password"/></label>
                         <div class="col-sm-6">
+                        <c:set var="passwordNote"><spring:message code='passwordNote'/></c:set>
                             <form:password id="password" path="password"
-                                           class="form-control" placeholder="请输入密码"/>
+                                           class="form-control" placeholder="${passwordNote }"/>
                         </div>
                     </div>
-
 
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-9">
                             <div class="checkbox">
                                 <label class="control-label"> <input type="checkbox"
-                                                                     name="isRememberPwd"/>记住密码
+                                                                     name="isRememberPwd"/><spring:message code="RememberMe"/>
                                 </label>
                             </div>
                             <label class="control-label"> <select
                                     name="rememberd_days">
-                                <option value="1">1天</option>
-                                <option value="7">1个星期</option>
-                                <option value="30">1个月</option>
+                                <option value="1"><spring:message code="ADay"/></option>
+                                <option value="7"><spring:message code="AWeek"/></option>
+                                <option value="30"><spring:message code="AMonth"/></option>
                             </select>
                             </label>
                         </div>
@@ -195,7 +198,7 @@ pageEncoding="UTF-8"%>
 
 
                     <div class="form-group" id="captchaGroup">
-                        <label class="col-sm-3 control-label">验证码：</label>
+                        <label class="col-sm-3 control-label"><spring:message code="Captcha"/></label>
                         <div class="col-sm-3">
                             <input id="captcha" name="captcha" type="text"
                                    class="form-control" maxlength="4"/>
@@ -212,10 +215,10 @@ pageEncoding="UTF-8"%>
                 <span id="loginError">${loginError}</span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="close"/>
                 </button>
                 <button type="button" class="btn btn-primary" id="loginButton">
-                    登录
+           			<spring:message code="login"/>
                 </button>
             </div>
         </div>
@@ -233,14 +236,14 @@ pageEncoding="UTF-8"%>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">注册</h4>
+                <h4 class="modal-title" id="myModalLabel"> <spring:message code="register"/></h4>
             </div>
             <div class="modal-body">
                 <!-- 注册表单 -->
                 <form:form modelAttribute="regUser" role="form"
                            class="form-horizontal" id="registerForm">
                     <div class="form-group" id="ruserIdGroup">
-                        <label class="col-sm-3 control-label">用户名：</label>
+                        <label class="col-sm-3 control-label"><spring:message code="userId"/></label>
                         <div class="col-sm-6">
                             <form:input id="ruserId" path="userId"
                                         value="${request.user.userId }" class="form-control"/>
@@ -254,7 +257,7 @@ pageEncoding="UTF-8"%>
 
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">昵&nbsp;&nbsp;&nbsp;&nbsp;称：</label>
+                        <label class="col-sm-3 control-label"><spring:message code="nickname"/></label>
                         <div class="col-sm-6">
                             <form:input id="userName" path="userName"
                                         value="${request.user.userName }" class="form-control"/>
@@ -262,7 +265,7 @@ pageEncoding="UTF-8"%>
                     </div>
 
                     <div class="form-group" id="rpasswordGroup">
-                        <label class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
+                        <label class="col-sm-3 control-label"><spring:message code="password"/></label>
                         <div class="col-sm-6">
                             <form:password id="rpassword" path="password"
                                            class="form-control"/>
@@ -271,7 +274,7 @@ pageEncoding="UTF-8"%>
                     </div>
 
                     <div class="form-group" id="confirmPasswordGroup">
-                        <label class="col-sm-3 control-label">确认密码：</label>
+                        <label class="col-sm-3 control-label"><spring:message code="confirmPassword"/></label>
                         <div class="col-sm-6">
                             <input type="password" name="confirmPassword"
                                    class="form-control" id="confirmPassword"/>
@@ -283,9 +286,9 @@ pageEncoding="UTF-8"%>
                 <span id="registerError">${pwdEquals }</span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="close"/></button>
                 <button type="button" class="btn btn-primary" id="registerButton">
-                    注册
+                  <spring:message code="register"/>
                 </button>
             </div>
         </div>

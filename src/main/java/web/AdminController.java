@@ -19,10 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
+
 import domain.Good;
 import domain.User;
 import service.GoodService;
@@ -30,7 +32,7 @@ import service.UserService;
 import tool.IPTimeStamp;
 
 @Controller
-@SessionAttributes("regUser")
+@SessionAttributes({"regUser", "good"})
 @RequestMapping("/admin")
 public class AdminController {
 	
@@ -46,7 +48,7 @@ public class AdminController {
 		return new User();
 	}
 
-	/*//管理员管理商品信息要用的隐含模型
+	//管理员管理商品信息要用的隐含模型
 	@ModelAttribute("good")
 	//必须设置GET方式，否则在请求方法中填写的隐含模型回到本页面时会被覆盖！！！
 	@RequestMapping(method=RequestMethod.GET)
@@ -55,7 +57,7 @@ public class AdminController {
 		Good good = (Good) modelMap.get("good") ;
 		System.out.println(good.getGoodName());
 		return good;
-	}*/
+	}
 	
 	@RequestMapping("manage")
 	public String forwardAdminManage(ModelMap modelMap)
@@ -97,6 +99,7 @@ public class AdminController {
 	{	
 		String aimUrl = "admin_manage";
 		request.setAttribute("userId", userId);
+		request.setAttribute("good", new Good());
 		if (userId.equals(""))
 		{
 			request.setAttribute("updateHeadResult", "用户Id不能为空");
@@ -121,7 +124,7 @@ public class AdminController {
 		String prefix = infos.get("prefix");
 
 		operUserUpDir(userDirPath);
-		String filePath = infos.get("filepath");
+		String filePath = infos.get("filePath");
 
 		if (!headScul.isEmpty())
 		{
@@ -144,6 +147,7 @@ public class AdminController {
 			request.setAttribute("updateHeadResult", "请选择图片!");
 		return aimUrl;
 	}
+	
 	//查询商品信息
 	@RequestMapping(value="queryGoodInfo", params={"goodId"})
 	public String queryGoodInfo(ModelMap modelMap, String goodId)
@@ -248,6 +252,7 @@ public class AdminController {
 		
 		if ( goodService.insertGood(good) == true){
 			modelMap.put("insertGoodResult", "添加成功");
+			modelMap.put("typeId", good.getGoodType());
 			return "admin_manage";
 		}
 

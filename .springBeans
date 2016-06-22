@@ -12,6 +12,7 @@
 		<config>src/main/webapp/WEB-INF/daoContext.xml</config>
 		<config>src/main/webapp/WEB-INF/webContext.xml</config>
 		<config>src/main/webapp/WEB-INF/serviceContext.xml</config>
+		<config>src/main/webapp/WEB-INF/views.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>
