@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,7 +11,7 @@ pageEncoding="UTF-8"%>
           rel="stylesheet">
     <style>
         .col-sm-12 {
-            background-image: url("http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg");
+            background-image: url(/OnlineShopping/images/userManageBackground.jpg);
             background-size: cover;
         }
 
@@ -20,9 +21,9 @@ pageEncoding="UTF-8"%>
 
         .container {
             width: 70%;
-            border-left: medium solid #ccc;
-            border-top: medium solid #ccc;
-            border-right: medium solid #ccc;
+            border-left: medium solid #ffbebe;
+            border-top: medium solid #ffbebe;
+            border-right: medium solid #ffbebe;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
         }
@@ -39,7 +40,36 @@ pageEncoding="UTF-8"%>
     </style>
 </head>
 <body>
-
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#example-navbar-collapse">
+            <span class="sr-only">切换导航</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">shopping</a>
+    </div>
+    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="/OnlineShopping/user/index">主页</a></li>
+            <li class="active"><a href="#">用户管理</a></li>
+            <li><a href="/OnlineShopping/order/manage">订单管理</a></li>
+            <li><a href="/OnlineShopping/good/type/1/showGoods">商品信息</a></li>
+        </ul>
+		
+		<c:choose >
+		    <c:when test="${empty loginedUser }">
+		          <a href="#" data-toggle="modal" data-target="#myModal2" class="navbar-text pull-right" id="register"><spring:message code="register"/></a>
+	        <a href="#" data-toggle="modal" data-target="#myModal1" class="navbar-text pull-right" id="login"><spring:message code="login"/></a>
+		    </c:when>
+		    <c:otherwise>
+	     		<c:import url="user_simple_info.jsp"/>
+       </c:otherwise>
+       </c:choose>
+    </div>
+</nav>
 <!-- 如果用户的头像是默认的，则加载images下的defaultHead.jpg，
     否则加载uploads下的用户文件夹下的上传的头像文件 -->
 <c:choose>

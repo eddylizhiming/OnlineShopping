@@ -1,23 +1,33 @@
 package service;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import dao.ShoppingCarDao;
 import dao.UserDaoImpl;
+import domain.Good;
+import domain.ShoppingCar;
 
-@Service
+@Service("shoppingCarService")
 public class ShoppingCarServiceImpl implements ShoppingCarService{
 
 	//日志记录器
 	private static Logger logger = Logger.getLogger(UserDaoImpl.class);
-		
+	
+	@Autowired
+	private GoodService goodService;
 	@Autowired
 	private ShoppingCarDao shoppingCarDao;
 	
 	@Transactional
 	public boolean addToCar(String userId, String goodId, Integer buyNum) {
+		//如果用户购买的商品数量大于库存
+		if (goodService.findGoodById(goodId).getAmount() < buyNum){
+			return false;
+		}
 		try{
 			//如果用户还没有购买该商品
 			if (shoppingCarDao.getUserBoughtGood(userId, goodId) == null){
@@ -56,6 +66,9 @@ public class ShoppingCarServiceImpl implements ShoppingCarService{
 		return shoppingCarDao.alterGoodsBoughtNum(userId, goodId, buyNum) > 0;
 	}
 
-
+	public List<ShoppingCar> getUserShoppingCar(String userId) {
+		// TODO Auto-generated method stub
+		return shoppingCarDao.getUserShoppingCar(userId);
+	}
 
 }

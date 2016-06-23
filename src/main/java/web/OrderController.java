@@ -20,7 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
 import domain.Order;
+import domain.ShoppingCar;
+import domain.User;
 import service.OrderService;
+import service.ShoppingCarService;
 import tool.Page;
 
 @Controller
@@ -144,4 +147,5 @@ public class OrderController {
 		return "orderListXml";
 	}
 
+	
 }

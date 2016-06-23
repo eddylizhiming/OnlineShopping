@@ -2,6 +2,7 @@
 pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -14,7 +15,7 @@ pageEncoding="UTF-8"%>
     <link href="http://apps.bdimg.com/libs/fontawesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
         .col-sm-12 {
-            background-image: url("http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg");
+            background-image: url(/OnlineShopping/images/userManageBackground.jpg);
             background-size: cover;
         }
 
@@ -47,6 +48,37 @@ pageEncoding="UTF-8"%>
     </style>
 </head>
 <body onload="onload()">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#example-navbar-collapse">
+            <span class="sr-only">切换导航</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">shopping</a>
+    </div>
+    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="/OnlineShopping/user/index">主页</a></li>
+            <li class="active"><a href="#">用户管理</a></li>
+            <li><a href="/OnlineShopping/order/manage">订单管理</a></li>
+            <li><a href="/OnlineShopping/good/type/1/showGoods">商品信息</a></li>
+        </ul>
+		
+		<c:choose >
+		    <c:when test="${empty loginedUser }">
+		          <a href="#" data-toggle="modal" data-target="#myModal2" class="navbar-text pull-right" id="register"><spring:message code="register"/></a>
+	        <a href="#" data-toggle="modal" data-target="#myModal1" class="navbar-text pull-right" id="login"><spring:message code="login"/></a>
+		    </c:when>
+		    <c:otherwise>
+	     		<c:import url="user_simple_info.jsp"/>
+       </c:otherwise>
+       </c:choose>
+    </div>
+</nav>
+
 <c:choose>
     <c:when test="${loginedUser.headScul  == 'defaultHead.jpg'}">
         <c:set var="userHeadSrc">images/defaultHead.jpg</c:set>
@@ -150,7 +182,7 @@ pageEncoding="UTF-8"%>
                 <input id="broadcast" class="form-control"/>
             </div>
             <div class="col-sm-3">
-                <button type="button" class="btn btn-link"  onclick="sendMsg()">广播
+                <button type="button" class="btn btn-link"  onclick="broadCastMsg()">广播
                 </button>
             </div>
         </div>
@@ -206,7 +238,7 @@ pageEncoding="UTF-8"%>
         <div class="form-group">
             <label class="col-sm-3 control-label"> 商品图片： </label>
             <div class="col-sm-6">
-                <img alt="商品图片" src="<c:url value='${goodPicSrc}'/>" align="middle"/>
+                <img alt="商品图片" src="<c:url value='${goodPicSrc}'/>" align="middle" class="img-responsive"/>
             </div>
         </div>
 
@@ -268,8 +300,8 @@ pageEncoding="UTF-8"%>
 </div>
 
 <script type="text/javascript" src="/OnlineShopping/dwr/engine.js"></script>
-<script type="text/javascript" src="/dwr/util.js"></script>  
-<script type="text/javascript" src="/dwr/interface/SendMsg.js"></script> 
+<script type="text/javascript" src="/OnlineShopping/dwr/util.js"></script>  
+<script type="text/javascript" src="/OnlineShopping/dwr/interface/DwrSender.js"></script> 
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -451,8 +483,8 @@ pageEncoding="UTF-8"%>
         $(".container").css('height', documentHeight + 523);
     }
     
-    function sendMsg(){
-    	SendMsg.sendMsg('abcdef');
+    function broadCastMsg(){
+    	DwrSender.sendMsg($('#broadcast').val());
     }
 </script>
 </body>

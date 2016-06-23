@@ -49,7 +49,7 @@
 	<img src="/OnlineShopping/images/题标1.jpg"class="num">
 	&nbsp;&nbsp;<a href="/OnlineShopping/user/index">返回主页</a>
   </div>
-  <div><img src="/OnlineShopping/images/题标2.jpg" class="num">&nbsp;&nbsp;如有问题请联系管理员李志明</div>
+  <div><img src="/OnlineShopping/images/题标2.jpg" class="num"> &nbsp;&nbsp;如有问题请联系管理员李志明</div>
 </div>
 
 </body>

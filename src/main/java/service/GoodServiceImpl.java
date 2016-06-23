@@ -7,7 +7,7 @@ import dao.GoodDao;
 import domain.Good;
 import tool.Page;
 
-@Service
+@Service("goodService")
 public class GoodServiceImpl implements GoodService{
 
 	@Autowired

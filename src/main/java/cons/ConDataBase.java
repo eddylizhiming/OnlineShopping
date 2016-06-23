@@ -26,8 +26,10 @@ public class ConDataBase {
 			+ " FROM tb_goods as goods "
 			+ " WHERE goodType = ?  AND (goodId like %? % OR goodName like %? %) "
 			+ " LIMIT ?, ?";*/
-
+	public final static String SELECT_USER_SHOPPINGCAR_SQL = " SELECT userId, goodId, amount FROM tb_shoppingCar WHERE userId = ? ";
 	public final static String INSERT_SHOPPING_CAR_SQL = "INSERT INTO tb_shoppingCar (userId, goodId, amount) "
+			+ " VALUES (:userId, :goodId, :amount) ";
+	public final static String s = "INSERT INTO tb_shoppingCar (userId, goodId, amount) "
 			+ " VALUES (:userId, :goodId, :amount) ";
 	public final static String SELECT_USER_HAS_BUY_GOOD_SQL = " SELECT userId, goodId, amount FROM tb_shoppingCar "
 			+ " WHERE userId = ? AND goodId = ? ";
@@ -37,6 +39,8 @@ public class ConDataBase {
 			+ " WHERE userId = ? AND goodId = ? ";
 	public final static String REMOVE_GOOD_FROM_CAR_SQL = " DELETE FROM tb_shoppingCar WHERE userId = ? AND goodId = ? ";
 	public final static String DELETE_GOOD_BY_ID_SQL = " DELETE FROM tb_goods WHERE goodId = ? ";
+	
+	
 	public final static String UPDATE_GOOD_SQL = "UPDATE tb_goods SET goodName = :goodName,"
 		 	+ " goodType = :goodType, pictureSrc = :pictureSrc, unitPrice = :unitPrice, amount = :amount"
 		 	+ " WHERE goodId = :goodId ";

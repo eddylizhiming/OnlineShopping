@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-		http://www.directwebremoting.org/schema/spring-dwr      
-        http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 
 	<!-- 扫描web包中标注了@controller的类，放入Spring容器 -->
@@ -41,10 +40,10 @@
 	<!-- 异常处理 -->
 	<bean id="exceptionResolver"
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="statusCodes">
+		<property name="exceptionMappings">
 			<props>
-				<!-- HTTP错误码web.xml中配置 -->
-				<prop key="/OnlineShopping/jsp/exception/500.jsp">500</prop>
+				<prop key="javax.security.auth.login.LoginException">exception/user_not_login_</prop>
+				<prop key="javax.naming.AuthenticationException">exception/user_authority_error</prop>
 			</props>
 		</property>
 	</bean>
@@ -111,9 +110,10 @@
 		p:cookieName="clientLanguage" p:cookieMaxAge="100000" p:cookiePath="/"
 		p:defaultLocale="zh_CN" />
 
-	<!-- 时区改变拦截器 -->
 	<mvc:interceptors>
-		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"></bean>
+		<!-- 时区改变拦截器 -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+		<bean class="cons.LoginInterceptor"/>
 	</mvc:interceptors>
 
 	<bean
@@ -121,4 +121,23 @@
 		<property name="order" value="1" />
 	</bean>
 	
+	<!-- QuartZ -->
+	<bean name="jobDetail" class="org.springframework.scheduling.quartz.JobDetailBean"
+		p:jobClass="cons.OrderJob"/>
+		
+	<!--p:repeatCount = -1 永久执行 -->
+	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean"
+		p:jobDetail-ref="jobDetail"
+		p:startDelay="1000"
+		p:repeatInterval="20000"
+		p:repeatCount="-1"/>
+	
+	<bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="simpleTrigger"/>
+			</list>
+		</property>
+	</bean>	
+			
 </beans>

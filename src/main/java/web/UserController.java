@@ -3,6 +3,8 @@ package web;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,7 @@ import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +26,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import domain.LoginingUser;
+import domain.ShoppingCar;
 import domain.User;
+import service.ShoppingCarService;
 import service.UserService;
 import tool.CaptchaGenerator;
 import tool.FormatValidation;
@@ -117,7 +122,7 @@ public class UserController {
 			}
 			//如果权限是管理员
 			if(user.getAuthority().equals("admin"))
-				return "admin_manage";
+				return "redirect:/admin/manage";
 			
 			return "index";
 		}
@@ -491,4 +496,14 @@ public class UserController {
 		
 		return aimUrl;
 	}
+	
+	//注销用户
+	@RequestMapping(value="logout")
+	public String logout(HttpServletRequest request){
+		request.getSession().removeAttribute("loginedUser");
+		 request.getSession().invalidate();
+		return "index";
+	}
+	
+
 }

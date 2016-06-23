@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="pager" tagdir="/WEB-INF/tags"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -22,8 +23,8 @@ body {
 }
 
 #queryForm {
-	left: 50%;
-	top: 50%;
+	left: 0%;
+	top: 0%;
 	width: 400px;
 	height: 360px;
 	z-index: 9999;
@@ -33,14 +34,14 @@ body {
 	margin-top: 20px;
 }
 
-.col-sm-12 img, #queryForm, table, #orderForm, .page-bar, button,
+.headScul img, #queryForm, table, #orderForm, .page-bar, button,
 	#buttonGroup {
 	position: absolute;
 }
 
-.col-sm-12 {
+.headScul {
 	background-image:
-		url("http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg");
+		url(/OnlineShopping/images/orderManageBackground.jpg);
 	background-size: cover;
 }
 
@@ -50,6 +51,36 @@ th {
 </style>
 </head>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target="#example-navbar-collapse">
+            <span class="sr-only">切换导航</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">shopping</a>
+    </div>
+    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="/OnlineShopping/user/index">主页</a></li>
+            <li><a href="/OnlineShopping/user/manage">用户管理</a></li>
+            <li class="active"><a href="#">订单管理</a></li>
+            <li><a href="/OnlineShopping/good/type/1/showGoods">商品信息</a></li>
+        </ul>
+		
+		<c:choose >
+		    <c:when test="${empty loginedUser }">
+		          <a href="#" data-toggle="modal" data-target="#myModal2" class="navbar-text pull-right" id="register"><spring:message code="register"/></a>
+	        <a href="#" data-toggle="modal" data-target="#myModal1" class="navbar-text pull-right" id="login"><spring:message code="login"/></a>
+		    </c:when>
+		    <c:otherwise>
+	     		<c:import url="user_simple_info.jsp"/>
+       </c:otherwise>
+       </c:choose>
+    </div>
+</nav>
 	<c:choose>
 		<c:when test="${loginedUser.headScul  == 'defaultHead.jpg'}">
 			<c:set var="userHeadSrc">images/defaultHead.jpg</c:set>
@@ -58,7 +89,7 @@ th {
 			<c:set var="userHeadSrc">uploads/${loginedUser.userId}/${loginedUser.headScul }</c:set>
 		</c:otherwise>
 	</c:choose>
-	<div class="col-sm-12">
+	<div class="headScul">
 		<span>&nbsp;</span> <img alt="头像" class="img-circle" width="120px"
 			height="120px" src="<c:url value = '/${userHeadSrc}'/>" />
 	</div>
@@ -114,16 +145,6 @@ th {
 			</div>
 		</form:form>
 	</div>
-
-
-	<!-- 遍历批量删除商品结果的信息 -->
-	<c:forEach var="deleteInfo" items="${deleteInfos }">
-    ${deleteInfo }<br />
-	</c:forEach>
-	<!-- 遍历批量更新商品结果的信息 -->
-	<c:forEach var="updateInfos" items="${updateInfos }">
-	${updateInfos }<br />
-	</c:forEach>
 
 	<form id="orderForm" method="post">
 		<div class="form-group">
@@ -191,6 +212,17 @@ th {
 		</div>
 	</div>
 	</c:if>
+	
+	<div class="row" style="position:absolute;bottom:0;left: 7px">
+		<!-- 遍历批量删除商品结果的信息 -->
+	<c:forEach var="deleteInfo" items="${deleteInfos }">
+    &nbsp;${deleteInfo }<br />
+	</c:forEach>
+	<!-- 遍历批量更新商品结果的信息 -->
+	<c:forEach var="updateInfos" items="${updateInfos }">
+	&nbsp;${updateInfos }<br />
+	</c:forEach>
+	</div>
 
 	<script type="text/javascript"
 		src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
@@ -295,11 +327,12 @@ th {
 
 		function locate() {
 			//撑开col-sm-12
-			$('.col-sm-12').css('background-size', '100% 300px');
-			$('.col-sm-12 span').css('line-height', '300px');
+			$('.headScul').css('background-size', '100% 300px');
+			$('.headScul span').css('line-height', '300px');
+			$('.headScul').css('width', $(document).width());
 
 			//头像居中
-			putThisCenter('.col-sm-12 img');
+			putThisCenter('.headScul img');
 
 			//表格居中
 			var sum = 0;

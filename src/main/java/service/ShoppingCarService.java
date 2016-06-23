@@ -1,5 +1,9 @@
 package service;
 
+import java.util.List;
+
+import domain.ShoppingCar;
+
 public interface ShoppingCarService {
 	
 	/***
@@ -31,5 +35,11 @@ public interface ShoppingCarService {
 	 * @return
 	 */
 	public boolean alterGoodsBoughtNum(String userId, String goodId, int buyNum);
+	/***
+	 * 获取用户的购物车信息
+	 * @param userId
+	 * @return 用户已经购买的商品Id和数量。
+	 */
+	public List<ShoppingCar> getUserShoppingCar(String userId);
 	
 }

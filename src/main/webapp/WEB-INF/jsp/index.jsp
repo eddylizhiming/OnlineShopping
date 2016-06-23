@@ -2,8 +2,8 @@
 pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
             padding: 0;
         }
 
-        .carousel, .container,p {
+        .carousel, .container,p,hr {
             position: absolute;
         }
 
@@ -28,37 +28,12 @@ pageEncoding="UTF-8"%>
         }
 
         hr {
-            position: absolute;
             left: 5%;
         }
-
-		#coverImage {
-            display: none;
-            position: absolute;
-        }
-
-        .filterEffects {
-            animation: myfirst 3s;
-            animation-delay: 1.5s;
-        }
-
-        @keyframes myfirst {
-
-            from {
-                filter: brightness(1) blur(0px);
-
-            }
-
-            to {
-                filter: brightness(.8) blur(2px);
-            }
-
-        }
-
-        .filter {
+		
+		.filter {
             filter: brightness(.8) blur(2px);
         }
-		
     </style>
 </head>
 <body>
@@ -72,30 +47,25 @@ pageEncoding="UTF-8"%>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">W3Cschool</a>
+        <a class="navbar-brand" href="#">shopping</a>
     </div>
     <div class="collapse navbar-collapse" id="example-navbar-collapse">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#">iOS</a></li>
-            <li><a href="#">SVN</a></li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Java <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">jmeter</a></li>
-                    <li><a href="#">EJB</a></li>
-                    <li><a href="#">Jasper Report</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">分离的链接</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">另一个分离的链接</a></li>
-                </ul>
-            </li>
+            <li class="active"><a href="#">主页</a></li>
+            <li><a href="/OnlineShopping/user/manage">用户管理</a></li>
+            <li><a href="/OnlineShopping/order/manage">订单管理</a></li>
+            <li><a href="/OnlineShopping/good/type/1/showGoods">商品信息</a></li>
         </ul>
-
-        <a href="#" data-toggle="modal" data-target="#myModal2" class="navbar-text pull-right" id="register"><spring:message code="register"/></a>
-        <a href="#" data-toggle="modal" data-target="#myModal1" class="navbar-text pull-right" id="login"><spring:message code="login"/></a>
+		
+		<c:choose >
+		    <c:when test="${empty loginedUser }">
+		          <a href="#" data-toggle="modal" data-target="#myModal2" class="navbar-text pull-right" id="register"><spring:message code="register"/></a>
+	        <a href="#" data-toggle="modal" data-target="#myModal1" class="navbar-text pull-right" id="login"><spring:message code="login"/></a>
+		    </c:when>
+		    <c:otherwise>
+	     		<c:import url="user_simple_info.jsp"/>
+       </c:otherwise>
+       </c:choose>
     </div>
 </nav>
 
@@ -109,15 +79,15 @@ pageEncoding="UTF-8"%>
     <!-- 轮播（Carousel）项目 -->
     <div class="carousel-inner">
         <div class="item active">
-            <img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" alt="First slide">
+            <img src="/OnlineShopping/images/carousel1.jpg" alt="First slide">
             <div class="carousel-caption"><spring:message code="Carousel1"/></div>
         </div>
         <div class="item">
-            <img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" alt="Second slide">
+            <img src="/OnlineShopping/images/carousel2.jpg" alt="Second slide">
             <div class="carousel-caption"><spring:message code="Carousel2"/></div>
         </div>
         <div class="item">
-            <img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" alt="Third slide">
+            <img src="/OnlineShopping/images/carousel3.jpg" alt="Third slide">
             <div class="carousel-caption"><spring:message code="Carousel3"/></div>
         </div>
     </div>
@@ -131,16 +101,35 @@ pageEncoding="UTF-8"%>
 </div>
 
 <div class="container">
-    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/clothes.jpg)"><span>&nbsp;</span></div>
-    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/electronics.jpg)"><span>&nbsp;</span></div>
-    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/essentials.jpg)"><span>&nbsp;</span></div>
-    <div class="col-sm-6" style="background-image: url(/OnlineShopping/images/food.jpg)"><span>&nbsp;</span></div>
+    <div class="row">
+        <div class="col-sm-6 col-md-3">
+            <div class="thumbnail">
+                <img src="/OnlineShopping/images/clothes.jpg"
+                     alt="通用的占位符缩略图">
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="thumbnail">
+                <img src="/OnlineShopping/images/electronics.jpg"
+                     alt="通用的占位符缩略图">
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="thumbnail">
+                <img src="/OnlineShopping/images/essentials.jpg" alt="通用的占位符缩略图">
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="thumbnail">
+                <img src="/OnlineShopping/images/food.jpg"
+                     alt="通用的占位符缩略图">
+            </div>
+        </div>
+    </div>
 </div>
 
 <hr size="1" width="90%" color="#000">
 <p><spring:message code="footer"/></p>
-<img src="http://img1.ph.126.net/7z_KVVOqCG-7md70mOPAfQ==/6631569143001149038.jpg" id="coverImage" class="filterEffects" style="z-index: 99999">
-
 
 </div>
 <!-- 模态框（Modal） -->
@@ -333,7 +322,6 @@ pageEncoding="UTF-8"%>
         //do something
         $("#userId").val("${cookie.userId.value}");
         $("#password").val("${cookie.password.value}");
-        $('body').css('overflow','hidden');
         locate();
     });
 
@@ -513,34 +501,7 @@ pageEncoding="UTF-8"%>
         }
     });
 
-    //-------------背景图片js------------------------
-    $('#coverImage').attr({
-        'width': $(window).width(),
-        'height': $(window).height()
-    });
-    //$('#coverImage').fadeIn(2000);
-
-    $(window).resize(function () {
-        $('#coverImage').attr({
-            'width': $(window).width(),
-            'height': $(window).height()
-        });
-
-        putThisCenter('#login', 0.4);
-        putThisCenter('#register', 0.6);
-    });
-
-    setTimeout('addFilter()', 4500);
-    setTimeout("removeCover()", 4500);
-    
-    function addFilter() {
-        $('#coverImage').removeClass().addClass('filter');
-    }
-    
-    function removeCover(){
-    	$('#coverImage').fadeOut(2000);
-    	$('body').css('overflow','scroll');
-    }
+  
 
     //-------------按钮布局js------------------------
     function putThisCenter(Element, percent) {

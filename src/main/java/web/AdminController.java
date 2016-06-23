@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.directwebremoting.annotations.RemoteMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -108,7 +109,7 @@ public class AdminController {
 		User user = userService.findUserByUserId(userId);
 		if (user == null)
 		{
-			request.setAttribute("updateHeadResult", "没有Id为"+ userId + "的用户");
+			request.setAttribute("updateHeadResult", "没有Id为：‘"+ userId + "’的用户");
 			return aimUrl;
 		}
 		//如果用户的权限不是普通用户
@@ -258,4 +259,5 @@ public class AdminController {
 		modelMap.put("insertGoodResult", "添加失败");
 		return "admin_manage";
 	}
+
 }
