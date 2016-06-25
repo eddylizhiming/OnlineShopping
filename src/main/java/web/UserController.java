@@ -505,5 +505,9 @@ public class UserController {
 		return "index";
 	}
 	
-
+	@RequestMapping("shoppingCar")
+	public String getShoppingCar()
+	{
+		return "user_shoppingCar";
+	}
 }

@@ -142,6 +142,7 @@ public class GoodController {
 	public String addToCar(@PathVariable("goodId") String goodId, Integer buyNum , HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException 
 	{
+		System.out.println("sdfsdfsfd");
 		if (request.getSession().getAttribute("loginedUser") == null)
 		{	
 			return "请您登录后再购买";

@@ -36,9 +36,12 @@ public class OrderJob implements Job {
 			ps = dbConn.createStatement();
 			int count = ps.executeUpdate("DELETE FROM tb_orders WHERE status = '已关闭'");
 			if (count > 0 ) logger.info("删除了" + count +"条已关闭的订单的记录");
+			dbConn.close();
 		} catch (Exception e) { 
-			e.printStackTrace(); 
-		} 
+			e.printStackTrace();
+		}finally{
+			
+		}
 
 	}
 

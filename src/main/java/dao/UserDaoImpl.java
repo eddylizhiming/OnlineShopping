@@ -36,10 +36,6 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao{
 		return oneOrNull(jdbcTemplate.query(SELECT_USER_SQL, args, new BeanPropertyRowMapper<User>(User.class)));
 	}
 
-
-
-
-
 	public Integer insertUser(User user) {
 		//设置用户默认头像为defaultHead.jpg
 		user.setHeadScul("defaultHead.jpg");

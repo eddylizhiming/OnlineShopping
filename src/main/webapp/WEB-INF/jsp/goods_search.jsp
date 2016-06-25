@@ -56,6 +56,7 @@
             <li><a href="/OnlineShopping/user/manage">用户管理</a></li>
             <li><a href="/OnlineShopping/order/manage">订单管理</a></li>
             <li class="active"><a href="#">商品信息</a></li>
+            <li><a data-toggle="modal" data-target="#myModal3">查看购物车</a></li>
         </ul>
 		
 		<c:choose >
@@ -115,6 +116,31 @@
 		</div>
 		</div>
 	</div>
+	
+	<!-- 模态框（Modal）购物车 -->
+	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">
+						购物车
+					</h4>
+				</div>
+				<div class="modal-body">
+					<iframe src="/OnlineShopping/user/shoppingCar" frameborder="no"
+						border="0" marginwidth="0" marginheight="0" scrolling="no"
+						allowtransparency="yes" id="iframepage" width="100%" 
+
+height="400px")></iframe>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 	<script type="text/javascript"
 		src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
 	<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
@@ -167,6 +193,7 @@
 				'top' : parentHeight * 0.7 - elementHeight / 2
 			});
 		}
+		
 	</script>
 
 </body>

@@ -5,7 +5,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="pager" tagdir="/WEB-INF/tags"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -57,6 +56,7 @@
 			<li><a href="/OnlineShopping/user/manage">用户管理</a></li>
 			<li><a href="/OnlineShopping/order/manage">订单管理</a></li>
 			<li class="active"><a href="#">商品信息</a></li>
+			<li><a data-toggle="modal" data-target="#myModal3" id="watchCar">查看购物车</a></li>
 		</ul>
 
 		<c:choose>
@@ -100,7 +100,7 @@
 				</label>
 				<div class="col-sm-6">
 					<input type="text" id="goodCondition" name="goodCondition"
-						class="form-control" placeholder="请根据商品的ID或名称来搜索">
+						class="form-control" placeholder="请根据商品的类型或ID来搜索">
 				</div>
 				<div class="col-sm-3">
 					<button type="button" onclick="validAndSubmit()"
@@ -183,204 +183,56 @@
 				pageAttrKey="goodsPaged"></pager:PageBar>
 		</c:if>
 
-		<!-- 模态框（Modal） -->
-		<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
+
+		<!-- 模态框（Modal）购物车 -->
+		<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">
-							<spring:message code="login" />
+							购物车
 						</h4>
 					</div>
 					<div class="modal-body">
-						<!-- 登录表单 -->
-						<form:form modelAttribute="user" role="form" name="loginForm"
-							class="form-horizontal" method="post">
-							<div class="form-group" id="userIdGroup">
-								<label class="col-sm-3 control-label"><spring:message
-										code="userId" /></label>
-								<div class="col-sm-6">
-									<c:set var="userIdNote">
-										<spring:message code='userIdNote' />
-									</c:set>
-									<form:input id="userId" path="userId"
-										value="${request.user.userId }" class="form-control"
-										placeholder="${userIdNote }" />
-								</div>
-							</div>
-
-							<div class="form-group" id="passwordGroup">
-								<label class="col-sm-3 control-label"><spring:message
-										code="password" /></label>
-								<div class="col-sm-6">
-									<c:set var="passwordNote">
-										<spring:message code='passwordNote' />
-									</c:set>
-									<form:password id="password" path="password"
-										class="form-control" placeholder="${passwordNote }" />
-								</div>
-							</div>
-
-							<div class="form-group">
-								<div class="col-sm-offset-3 col-sm-9">
-									<div class="checkbox">
-										<label class="control-label"> <input type="checkbox"
-											name="isRememberPwd" /> <spring:message code="RememberMe" />
-										</label>
-									</div>
-									<label class="control-label"> <select
-										name="rememberd_days">
-											<option value="1"><spring:message code="ADay" /></option>
-											<option value="7"><spring:message code="AWeek" /></option>
-											<option value="30"><spring:message code="AMonth" /></option>
-									</select>
-									</label>
-								</div>
-							</div>
-
-
-							<div class="form-group" id="captchaGroup">
-								<label class="col-sm-3 control-label"><spring:message
-										code="Captcha" /></label>
-								<div class="col-sm-3">
-									<input id="captcha" name="captcha" type="text"
-										class="form-control" maxlength="4" />
-								</div>
-								<div class="col-sm-3">
-									<img src="/OnlineShopping/user/createCode?<%=Math.random()%>"
-										id="code" onclick="changeCode(this)" class="img-responsive" />
-								</div>
-								<div class="col-sm-3">
-									<label id="checkResult" class="control-label">请填写验证码</label>
-								</div>
-							</div>
-						</form:form>
-						<span id="loginError">${loginError}</span>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							<spring:message code="close" />
-						</button>
-						<button type="button" class="btn btn-primary" id="loginButton">
-							<spring:message code="login" />
-						</button>
+						<iframe src="/OnlineShopping/user/shoppingCar"
+							frameborder="no" border="0" marginwidth="0" marginheight="0"
+							scrolling="no" allowtransparency="yes" id="iframepage"
+							width="100%" height="400px")></iframe>
 					</div>
 				</div>
 				<!-- /.modal-content -->
 			</div>
 			<!-- /.modal -->
 		</div>
-
-		<!--注册表单 -----------------------------------------------------  -->
-		<!-- 模态框（Modal） -->
-		<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="myModalLabel">
-							<spring:message code="register" />
-						</h4>
-					</div>
-					<div class="modal-body">
-						<!-- 注册表单 -->
-						<form:form modelAttribute="regUser" role="form"
-							class="form-horizontal" id="registerForm">
-							<div class="form-group" id="ruserIdGroup">
-								<label class="col-sm-3 control-label"><spring:message
-										code="userId" /></label>
-								<div class="col-sm-6">
-									<form:input id="ruserId" path="userId"
-										value="${request.user.userId }" class="form-control" />
-									<form:errors path="userId" />
-								</div>
-								<div class="col-sm-3">
-									<label class="control-label" id="iconToDetermine"> <span></span>
-									</label>
-								</div>
-							</div>
-
-
-							<div class="form-group">
-								<label class="col-sm-3 control-label"><spring:message
-										code="nickname" /></label>
-								<div class="col-sm-6">
-									<form:input id="userName" path="userName"
-										value="${request.user.userName }" class="form-control" />
-								</div>
-							</div>
-
-							<div class="form-group" id="rpasswordGroup">
-								<label class="col-sm-3 control-label"><spring:message
-										code="password" /></label>
-								<div class="col-sm-6">
-									<form:password id="rpassword" path="password"
-										class="form-control" />
-									<form:errors path="password" />
-								</div>
-							</div>
-
-							<div class="form-group" id="confirmPasswordGroup">
-								<label class="col-sm-3 control-label"><spring:message
-										code="confirmPassword" /></label>
-								<div class="col-sm-6">
-									<input type="password" name="confirmPassword"
-										class="form-control" id="confirmPassword" />
-								</div>
-							</div>
-						</form:form>
-
-						<!-- 密码和确认密码相等的提示信息 -->
-						<span id="registerError">${pwdEquals }</span>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							<spring:message code="close" />
-						</button>
-						<button type="button" class="btn btn-primary" id="registerButton">
-							<spring:message code="register" />
-						</button>
-					</div>
-				</div>
-				<!-- /.modal-content -->
-			</div>
-			<!-- /.modal -->
-		</div>
-
 		<script type="text/javascript"
 			src="<c:url value = '/resourceRoot/jquery/jquery.js'/>"></script>
 		<script
 			src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
-			var flag = true;
-			var checkUserId = /^[A-Za-z0-9_]{6,30}$/;
-			var checkPassword = /^[A-Za-z0-9]{6,30}$/;
-
 			//！！！！符立明你来解决，获取选中的商品id，以及那一行文本框的值
 			//id值我放在了addToCar的button数组，把goodId，buyNum的值设置好。
 
 			//添加到购物车
 			function addToCar(Element) {
-				var buyNum = parseInt($(Element).parent().parent().prev()
-						.prev().find('#buyNum').val());
-				if ($(buyNum).val() == "" || parseInt($(buyNum).val()) <= 1) {
-					alert('商品数量不能小于1或空');
+				
+				var goodId = $(Element).attr('value');
+				var buyNum = $(Element).parent().parent().prev()
+						.prev().find('#buyNum');
+				
+				if(buyNum.val() == "" || parseInt(buyNum.val()) < 1)
+				{
+					alert("数量不能小于1或空");
 					return;
 				}
-				var goodId = $(Element).attr('value');
-
+				
 				$.post("/OnlineShopping/good/" + goodId + "/addToCar", {
-					buyNum : buyNum
+					buyNum : parseInt(buyNum.val())
 				}, function(data) {
 					//返回的添加情况，如"添加成功"等。
 					alert(data);
-					if (data == "请您登录后再购买")
-						window.location = "/OnlineShopping/user/index";
 				});
 			}
 
@@ -453,8 +305,8 @@
 
 				var buyNum = $(Element).parent().parent().prev()
 						.find('#buyNum');
-				if ($(buyNum).val() == "" || parseInt($(buyNum).val()) <= 1) {
-					alert('商品数量不能小于1或空');
+				if ($(buyNum).val() == "" || parseInt($(buyNum).val()) < 1) {
+					alert('商品数量不能小于0或空');
 					return;
 				}
 				var newValue = parseInt($(buyNum).val()) - 1;
@@ -471,193 +323,10 @@
 				var newValue = parseInt($(buyNum).val()) + 1;
 				$(buyNum).val(newValue);
 			};
-
-			$("#userId").val("${cookie.userId.value}");
-			$("#password").val("${cookie.password.value}");
-
-			//更换验证码，加随机数防止缓存
-			function changeCode(obj) {
-				obj.src = "/OnlineShopping/user/createCode?" + Math.random();
-			}
-
-			//核对验证码
-			function checkCode() {
-				$.post("/OnlineShopping/user/captchaCheck", {
-					captcha : $("#captcha").val()
-				}, function(data) {
-					//设置验证信息
-					$('#checkResult').html(data);
-					if (data == "验证码错误") {
-						$('#captchaGroup').removeClass('has-success');
-						$('#captchaGroup').addClass('has-error');
-					} else {
-						$('#captchaGroup').removeClass('has-error');
-						$('#captchaGroup').addClass('has-success');
-					}
-				});
-			}
-
-			//边输入边验证
-			$('#captcha').bind('input propertychange', function() {
-				checkCode();
-			});
-
-			//数据验证，符立明你来完善。。
-			function dataValid() {
-
-				flag = true;
-				$('#userIdGroup').removeClass('has-error has-success');
-				$('#passwordGroup').removeClass('has-error has-success');
-
-				//验证码是否正确验证
-				if ($("#checkResult").html() != "填写正确") {
-					flag = false;
-				}
-
-				//正则验证
-
-				if (checkUserId.test($('#userId').val()) == false) {
-					$('#userIdGroup').addClass('has-error');
-					alert('用户名长度为6至30个字符,且只能包含字母、数字和下划线');
-					flag = false;
-				} else {
-					$('#userIdGroup').addClass('has-success');
-				}
-				if (checkPassword.test($('#password').val()) == false) {
-					$('#passwordGroup').addClass('has-error');
-					alert('密码长度为6至30个字符');
-					flag = false;
-				} else {
-					$('#passwordGroup').addClass('has-success');
-				}
-
-			}
-
-			//登录按钮
-			$('#loginButton').click(function() {
-				dataValid();
-				if (flag == true) {
-					$.post("/OnlineShopping/user/loginCheck", {
-						userId : $("#userId").val(),
-						password : $("#password").val()
-					}, function(data) {
-						//设置验证信息
-
-						if (data == "该用户名不存在") {
-							$('#userIdGroup').addClass('has-error');
-						}
-						if (data == "密码错误") {
-							$('#passwordGroup').addClass('has-error');
-						}
-						if (data == "登录成功") {
-							$('#userIdGroup').addClass('has-success');
-							$('#passwordGroup').addClass('has-success');
-							user.action = "/OnlineShopping/user/login";
-							loginForm.submit();
-						}
-
-					});
-				}
-			});
-
-			//-------------注册表单js------------------------
-
-			//检查用户名是否可用
-			function checkUserIdAvl() {
-				$
-						.post(
-								"/OnlineShopping/user/userExistCheck",
-								{
-									userId : $("#ruserId").val()
-								},
-								function(data) {
-									//设置可用信息
-									$('#iconToDetermine')
-											.removeClass(
-													'glyphicon glyphicon-ok glyphicon glyphicon-remove');
-									$('#ruserIdGroup').removeClass(
-											'has-error has-success');
-
-									if (data == 'false') {
-										$('#iconToDetermine').addClass(
-												'glyphicon glyphicon-remove');
-										$('#ruserIdGroup')
-												.addClass('has-error');
-										$('#iconToDetermine').css('color',
-												'#f00');
-
-									} else {
-										$('#iconToDetermine').addClass(
-												'glyphicon glyphicon-ok');
-										$('#ruserIdGroup').addClass(
-												'has-success');
-										$('#iconToDetermine').css('color',
-												'#0f0');
-									}
-								});
-			}
-
-			function checkConfirmPassword() {
-				$('#confirmPasswordGroup').removeClass('has-error has-success');
-				if ($('#confirmPassword').val() != $('#rpassword').val()) {
-					$('#confirmPasswordGroup').addClass('has-error');
-				} else {
-					$('#confirmPasswordGroup').addClass('has-success');
-				}
-			}
-
-			//数据验证，符立明你来完善哈。。
-			function rdataValid() {
-				var flag = true;
-				if ($('#rpasswordGroup').attr('class') == 'form-group has-error') {
-					alert('请确保密码在6至30个字符内');
-					flag = false;
-				}
-				if ($("#ruserId").val() == "") {
-					alert("用户名不能为空");
-					flag = false;
-				}
-				if ($('#iconToDetermine').attr('class') == 'control-label glyphicon glyphicon-remove') {
-					alert('请确保用户名在6至30个字符内 or 有人已经用了这个名字了');
-					flag = false;
-				}
-				if ($('#confirmPasswordGroup').attr('class') == 'form-group has-error'
-						|| ($('#confirmPassword').val() != $('#rpassword')
-								.val())) {
-					flag = false;
-					$('#confirmPasswordGroup').addClass('has-error');
-					alert('确认密码输错啦');
-				}
-				return flag;
-			}
-			//边输入边验证用户名
-			$('#ruserId').bind('input propertychange', function() {
-				checkUserIdAvl();
-			});
-			//边输入边验证确认密码
-			$('#confirmPassword').bind('input propertychange', function() {
-				checkConfirmPassword();
-			});
-			$('#rpassword').bind('input propertychange', function() {
-				checkConfirmPassword();
-			});
-			//边输入边验证密码
-			$('#rpassword').bind('input propertychange', function() {
-				$('#rpasswordGroup').removeClass('has-error has-success');
-				if (checkPassword.test($('#rpassword').val())) {
-					$('#rpasswordGroup').addClass('has-success');
-				} else {
-					$('#rpasswordGroup').addClass('has-error');
-				}
-			});
-			//注册按钮
-			$('#registerButton').click(function() {
-				if (rdataValid()) {
-					alert('注册成功');
-					registerForm.action = "/OnlineShopping/user/register";
-					$('#registerForm').submit();
-				}
-			});
+			
+			$('#watchCar').click(function(){
+				 document.getElementById("iframepage").contentWindow.windowReload();
+			})
 		</script>
 </body>
 </html>
